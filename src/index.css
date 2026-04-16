@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-body text-gray-700 bg-slate-50;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-lime-500 text-white hover:bg-lime-600 transition-colors px-6 py-3 rounded-full font-bold shadow-md hover:shadow-lg active:scale-95 transform duration-200;
+  }
+  .btn-secondary {
+    @apply border-2 border-lime-500 text-lime-600 hover:bg-lime-50 transition-colors px-6 py-3 rounded-full font-bold shadow-sm hover:shadow-md active:scale-95 transform duration-200;
+  }
+  .card-hover {
+    @apply hover:-translate-y-1 transition-transform duration-300 hover:shadow-xl;
+  }
+}
