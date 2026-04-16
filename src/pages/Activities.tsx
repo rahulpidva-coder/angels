@@ -13,7 +13,7 @@ import act_dance      from "../assets/act_Dance.png";
 import act_read       from "../assets/act_GroupReading.png";
 import act_Arts       from "../assets/act_Arts.png";
 import act_Story      from "../assets/act_Story.png";
-import act_Block      from "../assets/act_Block.png";
+import act_Block      from "../assets/act_block.png";
 import act_classwork  from "../assets/act_classwork.png";
 import act_freeplay   from "../assets/act_freeplay.png";
 
