@@ -4,10 +4,10 @@ import {
   Calendar, MessageCircle, HelpCircle,
 } from 'lucide-react';
 import { useModal } from '../context/ModalContext';
+import { Button, SectionHeader, Card } from '../components/ui';
 
 const Admissions: React.FC = () => {
   const { openEnquiryModal, openVisitModal } = useModal();
-  const whatsappNumber = '+918369023546';
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const faqs = [
@@ -34,7 +34,7 @@ const Admissions: React.FC = () => {
     {
       q: "Can we visit the school before enrolling?",
       a: `Yes, absolutely. You can visit the school, see the classrooms, and understand how we work. Visits are by appointment — book yours below and we'll confirm a slot that works for you.`,
-      cta: 'visit', // ← inline Book a Visit button here
+      cta: 'visit',
     },
     {
       q: "Do you provide transportation?",
@@ -59,12 +59,12 @@ const Admissions: React.FC = () => {
   ];
 
   const steps = [
-    { step: '1', icon: MessageCircle,  title: 'Initial Enquiry',               description: 'Contact us via WhatsApp, phone, or visit our school. We will answer your questions and share basic information about our programs.' },
-    { step: '2', icon: Calendar,       title: 'Schedule a School Visit',        description: 'Book an appointment to visit our school, see classrooms in action, meet our teachers, and get a feel for the Angels environment.' },
-    { step: '3', icon: Users,          title: 'Interaction with Child & Parent', description: "A friendly, informal interaction where we get to know your child and you get to know us better. This helps us understand your child's needs and temperament." },
-    { step: '4', icon: FileText,       title: 'Form Submission',                description: 'Fill out the admission form with necessary details and submit required documents (birth certificate, photos, address proof, etc.).' },
-    { step: '5', icon: CreditCard,     title: 'Fee Payment',                   description: "Pay the admission fee and first-term fees to secure your child's seat. We accept various payment methods for your convenience." },
-    { step: '6', icon: ClipboardCheck, title: 'Confirmation & Orientation',    description: "Receive confirmation of admission, orientation details, and prepare for your child's exciting journey at Angels!" },
+    { step: '1', icon: MessageCircle,  title: 'Initial Enquiry',                description: 'Contact us via WhatsApp, phone, or visit our school. We will answer your questions and share basic information about our programs.' },
+    { step: '2', icon: Calendar,       title: 'Schedule a School Visit',         description: 'Book an appointment to visit our school, see classrooms in action, meet our teachers, and get a feel for the Angels environment.' },
+    { step: '3', icon: Users,          title: 'Interaction with Child & Parent',  description: "A friendly, informal interaction where we get to know your child and you get to know us better. This helps us understand your child's needs and temperament." },
+    { step: '4', icon: FileText,       title: 'Form Submission',                 description: 'Fill out the admission form with necessary details and submit required documents (birth certificate, photos, address proof, etc.).' },
+    { step: '5', icon: CreditCard,     title: 'Fee Payment',                    description: "Pay the admission fee and first-term fees to secure your child's seat. We accept various payment methods for your convenience." },
+    { step: '6', icon: ClipboardCheck, title: 'Confirmation & Orientation',     description: "Receive confirmation of admission, orientation details, and prepare for your child's exciting journey at Angels!" },
   ];
 
   const eligibility = [
@@ -88,20 +88,20 @@ const Admissions: React.FC = () => {
           their educational journey.
         </p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <button type="button" onClick={openEnquiryModal} className="btn-primary inline-flex items-center justify-center gap-2">
+          <Button onClick={openEnquiryModal}>
             <MessageCircle className="h-5 w-5" />
             Admission Enquiry
-          </button>
-          <button type="button" onClick={openVisitModal} className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-sky-500 bg-white text-sky-700 font-semibold px-8 py-4 shadow-sm hover:bg-sky-50 transition">
+          </Button>
+          <Button variant="sky-outline" size="lg" onClick={openVisitModal}>
             <Calendar className="h-5 w-5" />
             Book a Visit
-          </button>
+          </Button>
         </div>
       </section>
 
       {/* Overview */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-10">
+        <Card padding="none" className="p-8 md:p-10 shadow-xl">
           <h2 className="text-3xl font-heading font-bold text-gray-800 mb-6">Admissions Overview</h2>
           <div className="space-y-4 text-gray-600">
             <p className="text-lg">
@@ -120,21 +120,16 @@ const Admissions: React.FC = () => {
               both you and your child to feel comfortable and confident about joining the Angels family.
             </p>
           </div>
-        </div>
+        </Card>
       </section>
 
       {/* Step-by-step */}
       <section className="bg-amber-50 py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-800">
-              Step-by-Step Admission Process
-            </h2>
-            <div className="w-16 h-1 bg-lime-500 mx-auto mt-3 rounded-full" />
-          </div>
+          <SectionHeader title="Step-by-Step Admission Process" className="mb-12" />
           <div className="space-y-6">
             {steps.map(({ step, icon: Icon, title, description }) => (
-              <div key={step} className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 md:p-8 flex items-start gap-6">
+              <Card key={step} padding="none" className="p-6 md:p-8 flex items-start gap-6">
                 <div className="flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-lime-500 text-white flex items-center justify-center text-2xl font-bold shadow-md">{step}</div>
                 </div>
@@ -145,7 +140,7 @@ const Admissions: React.FC = () => {
                   </div>
                   <p className="text-gray-600">{description}</p>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -160,7 +155,7 @@ const Admissions: React.FC = () => {
             Age criteria as of <span className="font-bold text-gray-800">April 1st</span> of the academic year:
           </p>
         </div>
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+        <Card padding="none" className="p-8 shadow-xl">
           <div className="grid md:grid-cols-2 gap-6">
             {eligibility.map((item) => (
               <div key={item.program} className="p-4 rounded-xl bg-amber-50 border-l-4 border-lime-500">
@@ -172,33 +167,30 @@ const Admissions: React.FC = () => {
           <p className="text-sm text-gray-500 mt-6">
             * In special cases, we may consider children who are slightly younger or older. Please contact us to discuss.
           </p>
-        </div>
+        </Card>
       </section>
 
       {/* Timings */}
       <section className="bg-gradient-to-br from-lime-50 to-cyan-50 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-800">School Timings</h2>
-            <div className="w-16 h-1 bg-lime-500 mx-auto mt-3 rounded-full" />
-          </div>
+          <SectionHeader title="School Timings" />
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8">
+            <Card padding="lg">
               <h3 className="text-2xl font-heading font-bold text-lime-600 mb-4">Playgroup & Nursery</h3>
               <div className="space-y-2 text-gray-600">
                 <p><span className="font-bold text-gray-800">Timings:</span> 9:00 AM – 12:00 PM</p>
                 <p><span className="font-bold text-gray-800">Duration:</span> 3 hours</p>
                 <p className="text-sm mt-4">Perfect duration for younger children to enjoy learning without getting too tired.</p>
               </div>
-            </div>
-            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8">
+            </Card>
+            <Card padding="lg">
               <h3 className="text-2xl font-heading font-bold text-cyan-600 mb-4">Jr. KG & Sr. KG</h3>
               <div className="space-y-2 text-gray-600">
                 <p><span className="font-bold text-gray-800">Timings:</span> 9:00 AM – 1:00 PM</p>
                 <p><span className="font-bold text-gray-800">Duration:</span> 4 hours</p>
                 <p className="text-sm mt-4">Extended hours for older children with structured learning and activities.</p>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </section>
@@ -211,17 +203,13 @@ const Admissions: React.FC = () => {
           </div>
           <h2 className="text-3xl font-heading font-bold text-gray-800 mb-4">Fee Structure</h2>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Our fee structure is transparent and competitive. We share complete fee details including
-            admission fees, term fees, and any additional costs during your school visit or upon request.
+            Our fee structure is transparent and competitive. We share complete fee details —
+            including admission fees, term fees, and any additional costs — during your school visit.
           </p>
-          <a
-            href={`https://wa.me/${whatsappNumber.replace(/\+/g, '')}?text=${encodeURIComponent("Hi! I would like to know the fee details for Angels Preschool.")}`}
-            target="_blank" rel="noopener noreferrer"
-            className="btn-primary inline-flex items-center gap-2"
-          >
-            <MessageCircle className="h-5 w-5" />
-            Request Fee Details on WhatsApp
-          </a>
+          <Button variant="sky" onClick={openVisitModal} className="rounded-xl">
+            <Calendar className="h-5 w-5" />
+            Book a School Visit
+          </Button>
         </div>
       </section>
 
@@ -232,11 +220,10 @@ const Admissions: React.FC = () => {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-lime-100 text-lime-600 mb-4">
               <HelpCircle className="h-8 w-8" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-800">
-              Frequently Asked Questions
-            </h2>
-            <div className="w-16 h-1 bg-lime-500 mx-auto mt-3 rounded-full" />
-            <p className="text-gray-600 mt-4">Everything you need to know about admissions.</p>
+            <SectionHeader
+              title="Frequently Asked Questions"
+              subtitle="Everything you need to know about admissions."
+            />
           </div>
 
           <div className="space-y-4">
@@ -251,16 +238,16 @@ const Admissions: React.FC = () => {
                 </summary>
                 <div className="px-5 pb-5 text-gray-600">
                   <p>{faq.a}</p>
-                  {/* Inline CTA for visit FAQ — highest intent moment */}
                   {faq.cta === 'visit' && (
-                    <button
-                      type="button"
+                    <Button
+                      variant="sky-outline"
+                      size="sm"
                       onClick={openVisitModal}
-                      className="mt-4 inline-flex items-center gap-2 rounded-full border-2 border-sky-500 bg-white text-sky-700 font-semibold px-5 py-2 text-sm hover:bg-sky-50 transition"
+                      className="mt-4 px-5"
                     >
                       <Calendar size={15} />
                       Book a Visit
-                    </button>
+                    </Button>
                   )}
                 </div>
               </details>
@@ -279,14 +266,14 @@ const Admissions: React.FC = () => {
             We'd love to meet you and your little one. Enquire for admission or book a visit.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button type="button" onClick={openEnquiryModal} className="btn-primary inline-flex items-center justify-center gap-2">
+            <Button onClick={openEnquiryModal}>
               <MessageCircle className="h-5 w-5" />
               Admission Enquiry
-            </button>
-            <button type="button" onClick={openVisitModal} className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-sky-500 bg-white text-sky-700 font-semibold px-8 py-4 shadow-sm hover:bg-sky-50 transition">
+            </Button>
+            <Button variant="sky-outline" size="lg" onClick={openVisitModal}>
               <Calendar className="h-5 w-5" />
               Book a Visit
-            </button>
+            </Button>
           </div>
         </div>
       </section>

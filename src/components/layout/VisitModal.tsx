@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, X, CheckCircle2 } from 'lucide-react';
+import { Input, Button } from '../ui';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -21,12 +22,14 @@ const VisitModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [errors, setErrors] = useState({ parentName: '', mobile: '', preferredSlot: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const reset = () => {
     setForm({ parentName: '', mobile: '', preferredSlot: '' });
     setErrors({ parentName: '', mobile: '', preferredSlot: '' });
     setIsSubmitting(false);
     setIsSuccess(false);
+    setSubmitError('');
   };
 
   const handleClose = () => {
@@ -49,6 +52,7 @@ const VisitModal: React.FC<Props> = ({ isOpen, onClose }) => {
     e.preventDefault();
     if (!validate()) return;
     setIsSubmitting(true);
+    setSubmitError('');
     try {
       const res = await fetch(`${API_BASE_URL}/api/visit-request`, {
         method: 'POST',
@@ -61,10 +65,10 @@ const VisitModal: React.FC<Props> = ({ isOpen, onClose }) => {
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.success) throw new Error(data.message || 'Failed');
+      if (!res.ok || !data.success) throw new Error('failed');
       setIsSuccess(true);
     } catch {
-      alert('Something went wrong. Please try again.');
+      setSubmitError('We could not book your visit right now. Please try again or call us directly on 8369023546.');
     } finally {
       setIsSubmitting(false);
     }
@@ -124,45 +128,34 @@ const VisitModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <form onSubmit={handleSubmit} className="space-y-4">
 
                   {/* Parent Name */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Parent Name <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter parent name"
-                      value={form.parentName}
-                      onChange={(e) => {
-                        setForm((p) => ({ ...p, parentName: e.target.value }));
-                        if (errors.parentName) setErrors((p) => ({ ...p, parentName: '' }));
-                      }}
-                      className="w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-800 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100 transition"
-                    />
-                    {errors.parentName && (
-                      <p className="text-xs text-rose-500 mt-1">{errors.parentName}</p>
-                    )}
-                  </div>
+                  <Input
+                    label="Parent Name"
+                    required
+                    placeholder="Enter parent name"
+                    value={form.parentName}
+                    error={errors.parentName}
+                    className="focus:border-sky-400 focus:ring-sky-100"
+                    onChange={(e) => {
+                      setForm((p) => ({ ...p, parentName: e.target.value }));
+                      if (errors.parentName) setErrors((p) => ({ ...p, parentName: '' }));
+                    }}
+                  />
 
                   {/* Mobile */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Mobile Number <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      inputMode="numeric"
-                      placeholder="Your WhatsApp number"
-                      value={form.mobile}
-                      onChange={(e) => {
-                        setForm((p) => ({ ...p, mobile: e.target.value }));
-                        if (errors.mobile) setErrors((p) => ({ ...p, mobile: '' }));
-                      }}
-                      className="w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-800 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100 transition"
-                    />
-                    {errors.mobile && (
-                      <p className="text-xs text-rose-500 mt-1">{errors.mobile}</p>
-                    )}
-                  </div>
+                  <Input
+                    label="Mobile Number"
+                    required
+                    type="tel"
+                    inputMode="numeric"
+                    placeholder="Your WhatsApp number"
+                    value={form.mobile}
+                    error={errors.mobile}
+                    className="focus:border-sky-400 focus:ring-sky-100"
+                    onChange={(e) => {
+                      setForm((p) => ({ ...p, mobile: e.target.value }));
+                      if (errors.mobile) setErrors((p) => ({ ...p, mobile: '' }));
+                    }}
+                  />
 
                   {/* Preferred Slot */}
                   <div>
@@ -187,15 +180,24 @@ const VisitModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     )}
                   </div>
 
+                  {/* Submit error */}
+                  {submitError && (
+                    <div className="rounded-xl bg-rose-50 border border-rose-100 px-3.5 py-2.5 text-xs text-rose-600 leading-relaxed">
+                      {submitError}
+                    </div>
+                  )}
+
                   {/* Submit */}
-                  <button
+                  <Button
                     type="submit"
+                    variant="sky"
+                    fullWidth
                     disabled={isSubmitting}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-sky-600 text-white text-sm font-semibold px-4 py-3 shadow-md shadow-sky-200 hover:bg-sky-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="rounded-xl text-sm font-semibold"
                   >
                     <Calendar size={16} />
                     {isSubmitting ? 'Submitting…' : 'Request Visit'}
-                  </button>
+                  </Button>
                 </form>
               ) : (
                 <div className="py-6 text-center">

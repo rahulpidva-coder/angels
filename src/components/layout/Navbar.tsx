@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useModal } from '../../context/ModalContext';
+import { Button } from '../ui';
 import logo from '../../assets/logo.png';
 
 const Navbar = () => {
@@ -52,20 +53,15 @@ const Navbar = () => {
               </Link>
             ))}
 
-            {/*
-              Sky outline style — matches the hero "Book a Visit" secondary CTA exactly.
-              Lime = Admission Enquiry (primary action)
-              Sky = Book a Visit (secondary action)
-              Consistent colour coding across every page.
-            */}
-            <button
-              type="button"
+            <Button
+              variant="sky-outline"
+              size="sm"
               onClick={openVisitModal}
-              className="ml-4 inline-flex items-center gap-1.5 rounded-full border-2 border-sky-500 bg-white text-sky-700 font-semibold px-5 py-2 text-sm shadow-sm hover:bg-sky-50 transition"
+              className="ml-4 px-5"
             >
               <Calendar size={15} />
               Book a Visit
-            </button>
+            </Button>
           </div>
 
           {/* Mobile menu toggle */}
@@ -105,14 +101,14 @@ const Navbar = () => {
                 </Link>
               ))}
               <div className="pt-4">
-                <button
-                  type="button"
+                <Button
+                  variant="sky-outline"
+                  fullWidth
                   onClick={() => { setIsOpen(false); openVisitModal(); }}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-full border-2 border-sky-500 bg-white text-sky-700 font-semibold px-5 py-3 shadow-sm hover:bg-sky-50 transition"
                 >
                   <Calendar size={16} />
                   Book a Visit
-                </button>
+                </Button>
               </div>
             </div>
           </motion.div>

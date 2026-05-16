@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, ChevronDown, ChevronLeft, ChevronRight, X, Quote, MessageCircle, Calendar } from 'lucide-react';
 import { useModal } from '../context/ModalContext';
+import { Button, SectionHeader } from '../components/ui';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  PHOTO SLOTS — replace null with real import when ready
 import hero1 from '../assets/gallery/hero1.png';
 import hero2 from '../assets/gallery/hero2.png';
 import hero3 from '../assets/gallery/hero3.png';
+import hero4 from '../assets/gallery/hero4.png';
 
 import morning1 from '../assets/gallery/morning1.png';
 import morning2 from '../assets/gallery/morning2.png';
-const morning3: string | null = null;
+import morning3 from '../assets/gallery/morning3.png';
 
 import classroom1 from '../assets/gallery/classroom1.png';
 import classroom2 from '../assets/gallery/classroom2.png';
@@ -19,7 +21,7 @@ import classroom3 from '../assets/gallery/classroom3.png';
 
 import play1 from '../assets/gallery/play1.png';
 import play2 from '../assets/gallery/play2.png';
-const play3: string | null = null;
+import play3 from '../assets/gallery/play3.png';
 
 const festival1: string | null = null;
 const festival2: string | null = null;
@@ -33,19 +35,18 @@ const annual6: string | null = null;
 const annual7: string | null = null;
 const annual8: string | null = null;
 
-import candid1 from '../assets/gallery/candid1.jpeg';
-import candid2 from '../assets/gallery/candid2.png';
-const candid3:  string | null = null;
-const candid4:  string | null = null;
-const candid5:  string | null = null;
-const candid6:  string | null = null;
-const candid7:  string | null = null;
-import candid8 from '../assets/gallery/candid8.png';
-
-const candid9:  string | null = null;
-const candid10: string | null = null;
+import candid1  from '../assets/gallery/candid1.jpeg';
+import candid2  from '../assets/gallery/candid2.png';
+import candid3  from '../assets/gallery/candid3.png';
+import candid4  from '../assets/gallery/candid4.png';
+import candid5  from '../assets/gallery/candid5.png';
+import candid6  from '../assets/gallery/candid6.png';
+import candid7  from '../assets/gallery/candid7.png';
+import candid8  from '../assets/gallery/candid8.png';
+import candid9  from '../assets/gallery/candid9.png';
+import candid10 from '../assets/gallery/candid10.png';
 import candid11 from '../assets/gallery/candid11.png';
-const candid12: string | null = null;
+import candid12 from '../assets/gallery/candid12.png';
 // ═══════════════════════════════════════════════════════════════════════════
 
 // ── Dynamic Annual Day year ────────────────────────────────────────────────
@@ -69,14 +70,6 @@ const Img = ({
     </div>
   );
 };
-
-// ── Section heading ────────────────────────────────────────────────────────
-const SectionHeading = ({ title }: { title: string }) => (
-  <div className="mb-8">
-    <h2 className="text-3xl font-heading font-bold text-gray-800">{title}</h2>
-    <div className="w-16 h-1 bg-lime-500 mt-3 rounded-full" />
-  </div>
-);
 
 // ── Motion variants ────────────────────────────────────────────────────────
 const fadeUp = {
@@ -120,12 +113,13 @@ const Gallery = () => {
     <div className="pb-24 overflow-x-hidden">
 
       <style>{`
-        .hero-slide { position: absolute; inset: 0; opacity: 0; animation: heroFade 12s infinite; }
+        .hero-slide { position: absolute; inset: 0; opacity: 0; animation: heroFade 16s infinite; }
         .hero-slide:nth-child(1) { animation-delay: 0s;  }
         .hero-slide:nth-child(2) { animation-delay: 4s;  }
         .hero-slide:nth-child(3) { animation-delay: 8s;  }
-        @keyframes heroFade { 0%{opacity:0} 8%{opacity:1} 33%{opacity:1} 41%{opacity:0} 100%{opacity:0} }
-        .hero-slide > * { animation: kenBurns 12s ease-out infinite; }
+        .hero-slide:nth-child(4) { animation-delay: 12s; }
+        @keyframes heroFade { 0%{opacity:0} 6%{opacity:1} 25%{opacity:1} 31%{opacity:0} 100%{opacity:0} }
+        .hero-slide > * { animation: kenBurns 16s ease-out infinite; }
         @keyframes kenBurns { 0%{transform:scale(1.06)} 100%{transform:scale(1.0)} }
         .candid-card img { transition: transform 0.5s ease; }
         .candid-card:hover img { transform: scale(1.04); }
@@ -138,6 +132,7 @@ const Gallery = () => {
             { src: hero1, label: 'Wide classroom — children engaged, warm light' },
             { src: hero2, label: 'Annual Day stage — costumes, big smiles'       },
             { src: hero3, label: 'Outdoor play — natural, candid, joyful'        },
+            { src: hero4, label: 'Summer camp — children learning and having fun' },
           ].map((slide, i) => (
             <div key={i} className="hero-slide">
               <Img src={slide.src} alt={`Angels Preschool ${i + 1}`} label={slide.label} className="w-full h-full object-cover" />
@@ -155,7 +150,9 @@ const Gallery = () => {
 
         {/* Morning — wide left + 2 stacked right */}
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={stagger}>
-          <motion.div variants={fadeUp}><SectionHeading title="Morning at Angels" /></motion.div>
+          <motion.div variants={fadeUp}>
+            <SectionHeader title="Morning at Angels" align="left" size="sm" className="mb-8" />
+          </motion.div>
           <div className="grid grid-cols-12 gap-4">
             <motion.div variants={fadeUp} className="col-span-12 md:col-span-7 aspect-[4/3] rounded-3xl overflow-hidden shadow-lg">
               <Img src={morning1} alt="Morning arrival" label="Teacher greeting children at the door" />
@@ -173,7 +170,9 @@ const Gallery = () => {
 
         {/* Classroom — offset 3-photo grid */}
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={stagger}>
-          <motion.div variants={fadeUp}><SectionHeading title="In the Classroom" /></motion.div>
+          <motion.div variants={fadeUp}>
+            <SectionHeader title="In the Classroom" align="left" size="sm" className="mb-8" />
+          </motion.div>
           <div className="grid grid-cols-12 gap-4 items-end">
             <motion.div variants={fadeUp} className="col-span-5 aspect-[3/4] rounded-3xl overflow-hidden shadow-lg">
               <Img src={classroom1} alt="Table time" label="Table time — writing or drawing" />
@@ -189,7 +188,9 @@ const Gallery = () => {
 
         {/* Play — 1 wide top + 2 side by side */}
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={stagger}>
-          <motion.div variants={fadeUp}><SectionHeading title="Play Time" /></motion.div>
+          <motion.div variants={fadeUp}>
+            <SectionHeader title="Play Time" align="left" size="sm" className="mb-8" />
+          </motion.div>
           <div className="space-y-4">
             <motion.div variants={fadeUp} className="aspect-[21/9] rounded-3xl overflow-hidden shadow-lg">
               <Img src={play1} alt="Free play indoors" label="Free play indoors — blocks and toys" />
@@ -207,7 +208,9 @@ const Gallery = () => {
 
         {/* Celebrations */}
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={stagger}>
-          <motion.div variants={fadeUp}><SectionHeading title="Celebrations & Special Days" /></motion.div>
+          <motion.div variants={fadeUp}>
+            <SectionHeader title="Celebrations & Special Days" align="left" size="sm" className="mb-8" />
+          </motion.div>
           <div className="grid grid-cols-2 gap-4">
             <motion.div variants={fadeUp} className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg">
               <Img src={festival1} alt="Festival" label="Children dressed up — festival day" />
@@ -270,7 +273,7 @@ const Gallery = () => {
             </div>
           </motion.div>
 
-          {/* Parent quote — dynamic year */}
+          {/* Parent quote */}
           <motion.div className="mt-16 text-center max-w-2xl mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
             <Quote className="text-lime-500 mx-auto mb-4" size={32} />
             <p className="text-gray-300 text-xl font-heading leading-relaxed italic">
@@ -285,7 +288,7 @@ const Gallery = () => {
       {/* ── 4. CANDID MOMENTS WALL ───────────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
         <motion.div className="mb-12" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={fadeUp}>
-          <SectionHeading title="Candid Moments" />
+          <SectionHeader title="Candid Moments" align="left" size="sm" />
         </motion.div>
 
         <motion.div
@@ -310,7 +313,7 @@ const Gallery = () => {
         </motion.div>
       </section>
 
-      {/* ── 5. CLOSING CTA — parent emotionally engaged, now act ─────── */}
+      {/* ── 5. CLOSING CTA ───────────────────────────────────────────── */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
@@ -324,14 +327,14 @@ const Gallery = () => {
             Come visit and experience it for yourself.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-            <button type="button" onClick={openEnquiryModal} className="btn-primary flex items-center justify-center gap-2">
+            <Button onClick={openEnquiryModal}>
               <MessageCircle size={18} />
               Admission Enquiry
-            </button>
-            <button type="button" onClick={openVisitModal} className="flex items-center justify-center gap-2 rounded-full border-2 border-sky-500 bg-white text-sky-700 font-semibold px-8 py-4 shadow-sm hover:bg-sky-50 transition">
+            </Button>
+            <Button variant="sky-outline" size="lg" onClick={openVisitModal}>
               <Calendar size={18} />
               Book a Visit
-            </button>
+            </Button>
           </div>
         </motion.div>
       </section>

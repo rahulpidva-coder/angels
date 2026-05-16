@@ -2,7 +2,9 @@ import React from "react";
 import { Heart, Eye, Target, Star, Shield, Home, Sparkles, Users, MessageCircle, Calendar, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useModal } from "../context/ModalContext";
+import { Button, SectionHeader } from "../components/ui";
 import ourStoryImg from "../assets/img_OurStory.png";
+import founderImg from "../assets/img_Founder.png";
 
 const About = () => {
   const { openEnquiryModal, openVisitModal } = useModal();
@@ -29,8 +31,7 @@ const About = () => {
             <img src={ourStoryImg} alt="Young children learning happily in a preschool classroom" className="w-full h-full object-cover" />
           </div>
           <div className="space-y-6">
-            <h2 className="text-3xl font-heading font-bold text-gray-800">Our Story</h2>
-            <div className="w-16 h-1 bg-lime-500 rounded-full" />
+            <SectionHeader title="Our Story" align="left" size="sm" />
             <p className="text-gray-600 leading-relaxed">
               Angels Preschool began in 1998 from a moment that changed
               everything. When a local daycare suddenly discontinued a batch
@@ -118,12 +119,12 @@ const About = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-4">
             {[
-              { icon: Heart,    color: 'bg-rose-50 text-rose-500',     shadow: 'shadow-rose-50 border-rose-50',     title: 'Love That Feels Like Home',         desc: 'Every child is welcomed with warmth, patience and genuine affection — the kind that makes them feel safe enough to learn and explore.' },
-              { icon: Star,     color: 'bg-lime-50 text-lime-600',     shadow: 'shadow-lime-50 border-lime-50',     title: 'Growth Through Gentle Guidance',    desc: 'We believe children blossom when they are encouraged, not pressured. Small daily wins slowly build lifelong confidence.' },
-              { icon: Shield,   color: 'bg-cyan-50 text-cyan-600',     shadow: 'shadow-cyan-50 border-cyan-50',     title: 'Character Over Competition',        desc: 'Kindness, honesty and respect are woven into everyday routines, helping children grow into grounded and responsible individuals.' },
-              { icon: Sparkles, color: 'bg-amber-50 text-amber-500',   shadow: 'shadow-amber-50 border-amber-50',   title: 'Learning Through Real Experiences', desc: 'Stories, play, conversations and exploration make every moment meaningful, so learning becomes natural and joyful instead of forced.' },
-              { icon: Home,     color: 'bg-emerald-50 text-emerald-600', shadow: 'shadow-emerald-50 border-emerald-50 md:col-span-2 lg:col-span-1', title: 'A Community Built on Trust', desc: 'Parents choose Angels for the love, consistency and integrity they experience every day — a preschool that truly feels like an extended family.' },
-              { icon: Users,    color: 'bg-sky-50 text-sky-600',       shadow: 'shadow-sky-50 border-sky-50',       title: 'Respect for Every Child',           desc: 'Every child is unique, and we honour their pace, personality and potential — nurturing confidence without comparison or pressure.' },
+              { icon: Heart,    color: 'bg-rose-50 text-rose-500',       shadow: 'shadow-rose-50 border-rose-50',                               title: 'Love That Feels Like Home',         desc: 'Every child is welcomed with warmth, patience and genuine affection — the kind that makes them feel safe enough to learn and explore.' },
+              { icon: Star,     color: 'bg-lime-50 text-lime-600',       shadow: 'shadow-lime-50 border-lime-50',                               title: 'Growth Through Gentle Guidance',    desc: 'We believe children blossom when they are encouraged, not pressured. Small daily wins slowly build lifelong confidence.' },
+              { icon: Shield,   color: 'bg-cyan-50 text-cyan-600',       shadow: 'shadow-cyan-50 border-cyan-50',                               title: 'Character Over Competition',        desc: 'Kindness, honesty and respect are woven into everyday routines, helping children grow into grounded and responsible individuals.' },
+              { icon: Sparkles, color: 'bg-amber-50 text-amber-500',     shadow: 'shadow-amber-50 border-amber-50',                             title: 'Learning Through Real Experiences', desc: 'Stories, play, conversations and exploration make every moment meaningful, so learning becomes natural and joyful instead of forced.' },
+              { icon: Home,     color: 'bg-emerald-50 text-emerald-600', shadow: 'shadow-emerald-50 border-emerald-50 md:col-span-2 lg:col-span-1', title: 'A Community Built on Trust',     desc: 'Parents choose Angels for the love, consistency and integrity they experience every day — a preschool that truly feels like an extended family.' },
+              { icon: Users,    color: 'bg-sky-50 text-sky-600',         shadow: 'shadow-sky-50 border-sky-50',                                 title: 'Respect for Every Child',           desc: 'Every child is unique, and we honour their pace, personality and potential — nurturing confidence without comparison or pressure.' },
             ].map(({ icon: Icon, color, shadow, title, desc }) => (
               <div key={title} className={`bg-white rounded-3xl shadow-lg p-7 text-left border ${shadow}`}>
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-sm ${color}`}>
@@ -135,7 +136,6 @@ const About = () => {
             ))}
           </div>
 
-          {/* Nudge to Programs — after values, parent naturally wonders what learning looks like */}
           <div className="text-center pt-4">
             <Link
               to="/programs"
@@ -171,8 +171,8 @@ const About = () => {
             </div>
             <div className="h-64 md:h-auto bg-lime-700 relative overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80"
-                alt="Founder of Angels Preschool with a warm smile"
+                src={founderImg}
+                alt="Mrs. Angela Pidva, Founder of Angels Preschool"
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
@@ -180,7 +180,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Final CTA — page ends with an action, not a dead end */}
+      {/* Final CTA */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-br from-lime-50 to-cyan-50 rounded-3xl border border-lime-100 px-8 py-12 text-center space-y-5">
           <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-800">
@@ -190,14 +190,14 @@ const About = () => {
             No commitment needed. Just visit, meet our team, and see why parents have trusted us for 25+ years.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-            <button type="button" onClick={openEnquiryModal} className="btn-primary flex items-center justify-center gap-2">
+            <Button onClick={openEnquiryModal}>
               <MessageCircle size={18} />
               Admission Enquiry
-            </button>
-            <button type="button" onClick={openVisitModal} className="flex items-center justify-center gap-2 rounded-full border-2 border-sky-500 bg-white text-sky-700 font-semibold px-8 py-4 shadow-sm hover:bg-sky-50 transition">
+            </Button>
+            <Button variant="sky-outline" size="lg" onClick={openVisitModal}>
               <Calendar size={18} />
               Book a Visit
-            </button>
+            </Button>
           </div>
         </div>
       </section>

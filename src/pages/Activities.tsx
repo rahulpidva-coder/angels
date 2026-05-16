@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useModal } from "../context/ModalContext";
+import { Button, SectionHeader } from "../components/ui";
 
 import annualDayHero  from "../assets/img_AnnualDayHero.jpeg";
 import calmTimeImg    from "../assets/img_CalmTime.png";
@@ -75,16 +76,12 @@ const Activities = () => {
 
       {/* ── CORE EXPERIENCES ──────────────────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900">
-            Our core experiences in the classroom
-          </h2>
-          <div className="w-16 h-1 bg-lime-500 mx-auto mt-3 rounded-full" />
-          <p className="text-gray-600 max-w-2xl mx-auto mt-4">
-            These are the simple, honest activities children keep coming back to — each one
-            designed to build confidence, curiosity and comfort in their own way.
-          </p>
-        </div>
+        <SectionHeader
+          title="Our core experiences in the classroom"
+          subtitle="These are the simple, honest activities children keep coming back to — each one designed to build confidence, curiosity and comfort in their own way."
+          titleClassName="text-gray-900"
+          className="mb-10"
+        />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
           <div className="bg-gradient-to-br from-lime-50 to-cyan-50 rounded-3xl shadow-lg border border-lime-100 overflow-hidden flex flex-col md:col-span-2 lg:col-span-1">
@@ -145,14 +142,12 @@ const Activities = () => {
               <PartyPopper className="h-4 w-4" />
               Signature moment
             </div>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900">
-              Annual Function — the highlight of our year
-            </h2>
-            <div className="w-16 h-1 bg-lime-500 mt-3 rounded-full" />
-            <p className="text-gray-600 max-w-2xl mt-4">
-              A grand yet warm celebration where every child gets a chance to shine,
-              no matter how shy or confident they are at the beginning of the year.
-            </p>
+            <SectionHeader
+              title="Annual Function — the highlight of our year"
+              subtitle="A grand yet warm celebration where every child gets a chance to shine, no matter how shy or confident they are at the beginning of the year."
+              align="left"
+              titleClassName="text-gray-900"
+            />
           </div>
 
           <div className="bg-white rounded-3xl shadow-2xl border border-lime-100 overflow-hidden grid lg:grid-cols-2">
@@ -177,7 +172,6 @@ const Activities = () => {
                 for children, it becomes their first real experience of facing a
                 crowd and feeling proud of themselves.
               </p>
-              {/* Link to Gallery — natural next click after reading about Annual Day */}
               <Link
                 to="/gallery"
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-lime-700 hover:text-lime-800 transition-colors mt-2"
@@ -193,16 +187,12 @@ const Activities = () => {
       {/* ── FESTIVALS & THEME DAYS ────────────────────────────────────── */}
       <section className="bg-orange-50/50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900">
-              Festivals &amp; special days
-            </h2>
-            <div className="w-16 h-1 bg-lime-500 mx-auto mt-3 rounded-full" />
-            <p className="text-gray-600 max-w-3xl mx-auto mt-4">
-              Celebrations are simple, child-friendly and meaningful — helping
-              children connect with culture in a way that feels joyful, not overwhelming.
-            </p>
-          </div>
+          <SectionHeader
+            title="Festivals &amp; special days"
+            subtitle="Celebrations are simple, child-friendly and meaningful — helping children connect with culture in a way that feels joyful, not overwhelming."
+            titleClassName="text-gray-900"
+            className="mb-10"
+          />
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white rounded-3xl shadow-lg border border-orange-100 overflow-hidden flex flex-col">
@@ -232,25 +222,22 @@ const Activities = () => {
         </div>
       </section>
 
-      {/* ── FIELD TRIPS — icon + text cards ───────────────────────────── */}
+      {/* ── FIELD TRIPS ───────────────────────────────────────────────── */}
       <section className="bg-gray-50 py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900">
-              Little adventures outside the classroom
-            </h2>
-            <div className="w-16 h-1 bg-lime-500 mx-auto mt-3 rounded-full" />
-            <p className="text-gray-600 max-w-2xl mx-auto mt-4">
-              Short, nearby trips that feel exciting but still safe and manageable for young children.
-            </p>
-          </div>
+          <SectionHeader
+            title="Little adventures outside the classroom"
+            subtitle="Short, nearby trips that feel exciting but still safe and manageable for young children."
+            titleClassName="text-gray-900"
+            className="mb-10"
+          />
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: Trees,         color: 'bg-green-50 text-green-600',   title: 'Nature walks',        desc: 'Walks around the neighbourhood or garden to spot trees, flowers and birds — learning to observe quietly and respect nature.' },
-              { icon: Users,         color: 'bg-sky-50 text-sky-600',       title: 'Community helpers',   desc: 'Simple interactions with doctors, shopkeepers and helpers children see every day, so they understand real-life roles.' },
-              { icon: ShoppingBasket, color: 'bg-amber-50 text-amber-600',  title: 'Market / farm visit', desc: 'For older groups, a basic visit to a vegetable market or farm to see where food really comes from.' },
-              { icon: Library,       color: 'bg-purple-50 text-purple-600', title: 'Library / book corner', desc: 'Trips that help children connect books with excitement, cosy spaces and stories — not pressure.' },
+              { icon: Trees,          color: 'bg-green-50 text-green-600',   title: 'Nature walks',         desc: 'Walks around the neighbourhood or garden to spot trees, flowers and birds — learning to observe quietly and respect nature.' },
+              { icon: Users,          color: 'bg-sky-50 text-sky-600',       title: 'Community helpers',    desc: 'Simple interactions with doctors, shopkeepers and helpers children see every day, so they understand real-life roles.' },
+              { icon: ShoppingBasket, color: 'bg-amber-50 text-amber-600',   title: 'Market / farm visit',  desc: 'For older groups, a basic visit to a vegetable market or farm to see where food really comes from.' },
+              { icon: Library,        color: 'bg-purple-50 text-purple-600', title: 'Library / book corner', desc: 'Trips that help children connect books with excitement, cosy spaces and stories — not pressure.' },
             ].map((trip, i) => (
               <div key={i} className="bg-white rounded-3xl shadow-md border border-gray-100 p-7 flex flex-col gap-4 hover:shadow-lg hover:border-lime-200 transition-all">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${trip.color}`}>
@@ -276,10 +263,10 @@ const Activities = () => {
             Come see it for yourself — or browse our gallery for a visual feel of life at Angels.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-            <button type="button" onClick={openEnquiryModal} className="btn-primary flex items-center justify-center gap-2">
+            <Button onClick={openEnquiryModal}>
               <MessageCircle size={18} />
               Enquire for Admission
-            </button>
+            </Button>
             <Link to="/gallery" className="flex items-center justify-center gap-2 rounded-full border-2 border-lime-500 bg-white text-lime-700 font-semibold px-8 py-4 hover:bg-lime-50 transition">
               View Gallery
             </Link>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Check, Clock, MessageCircle, Calendar, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useModal } from '../context/ModalContext';
+import { Button, SectionHeader } from '../components/ui';
 import prg_Play from '../assets/img_playgroup.png';
 import prg_Nur  from '../assets/img_nursery.png';
 import prg_Jr   from '../assets/img_Jr.png';
@@ -112,7 +113,6 @@ const Programs = () => {
                 </div>
               </div>
 
-              {/* Nudge to Activities — parent wonders what daily life looks like */}
               <Link
                 to="/activities"
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-lime-700 hover:text-lime-800 transition-colors"
@@ -128,10 +128,7 @@ const Programs = () => {
       {/* Daily Routine Timeline */}
       <section className="bg-gray-50 py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-heading font-bold text-gray-800">A Day at Angels</h2>
-            <div className="w-16 h-1 bg-lime-500 mx-auto mt-3 rounded-full" />
-          </div>
+          <SectionHeader title="A Day at Angels" size="sm" className="mb-12" />
           <div className="relative">
             <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-lime-200 rounded-full" />
             <div className="space-y-8">
@@ -161,7 +158,7 @@ const Programs = () => {
         </div>
       </section>
 
-      {/* Final CTA — parent has read all programs, now guide them to act */}
+      {/* Final CTA */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-br from-lime-50 to-cyan-50 rounded-3xl border border-lime-100 px-8 py-12 text-center space-y-5">
           <h2 className="text-2xl md:text-3xl font-heading font-bold text-gray-800">
@@ -171,14 +168,14 @@ const Programs = () => {
             Take the first step — enquire for admission or come visit us and see the school for yourself.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
-            <button type="button" onClick={openEnquiryModal} className="btn-primary flex items-center justify-center gap-2">
+            <Button onClick={openEnquiryModal}>
               <MessageCircle size={18} />
               Admission Enquiry
-            </button>
-            <button type="button" onClick={openVisitModal} className="flex items-center justify-center gap-2 rounded-full border-2 border-sky-500 bg-white text-sky-700 font-semibold px-8 py-4 shadow-sm hover:bg-sky-50 transition">
+            </Button>
+            <Button variant="sky-outline" size="lg" onClick={openVisitModal}>
               <Calendar size={18} />
               Book a Visit
-            </button>
+            </Button>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Phone, Mail, MapPin, MessageCircle, Send, Loader2 } from 'lucide-react';
+import { Button, Input, Textarea } from '../components/ui';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -113,10 +114,6 @@ const Contact = () => {
                   </div>
                 </div>
 
-                {/*
-                  Phone — entire row is the tap target.
-                  Icon rings on hover so user instantly understands it's callable.
-                */}
                 <a
                   href="tel:+918369023546"
                   className="tring-hover flex items-center gap-4 group cursor-pointer"
@@ -207,41 +204,34 @@ const Contact = () => {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">
-                    Parent Name <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    {...register('parentName', { required: 'Required' })}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 outline-none transition-all text-sm"
-                    placeholder="John Doe"
-                  />
-                  {errors.parentName && <span className="text-rose-500 text-xs">{errors.parentName.message}</span>}
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Child Name</label>
-                  <input
-                    {...register('childName')}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 outline-none transition-all text-sm"
-                    placeholder="Baby Doe"
-                  />
-                </div>
+                <Input
+                  label="Parent Name"
+                  required
+                  placeholder="John Doe"
+                  error={errors.parentName?.message}
+                  className="bg-gray-50"
+                  {...register('parentName', { required: 'Required' })}
+                />
+                <Input
+                  label="Child Name"
+                  placeholder="Baby Doe"
+                  className="bg-gray-50"
+                  {...register('childName')}
+                />
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Child's Age</label>
-                  <input
-                    {...register('age')}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 outline-none transition-all text-sm"
-                    placeholder="e.g. 3 Years"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Class Interested</label>
+                <Input
+                  label="Child's Age"
+                  placeholder="e.g. 3 Years"
+                  className="bg-gray-50"
+                  {...register('age')}
+                />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-semibold text-gray-700">Class Interested</label>
                   <select
                     {...register('class')}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 outline-none transition-all text-sm"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-800 outline-none focus:border-lime-400 focus:ring-4 focus:ring-lime-100 transition"
                   >
                     <option value="">Select Class</option>
                     <option value="Playgroup">Playgroup</option>
@@ -253,53 +243,46 @@ const Contact = () => {
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">
-                    Phone Number <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    {...register('phone', {
-                      required: 'Required',
-                      pattern: { value: /^[0-9]{10}$/, message: 'Invalid phone number' },
-                    })}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 outline-none transition-all text-sm"
-                    placeholder="9876543210"
-                  />
-                  {errors.phone && <span className="text-rose-500 text-xs">{errors.phone.message}</span>}
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Email Address</label>
-                  <input
-                    {...register('email', {
-                      pattern: { value: /^\S+@\S+$/i, message: 'Invalid email' },
-                    })}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 outline-none transition-all text-sm"
-                    placeholder="john@example.com"
-                  />
-                  {errors.email && <span className="text-rose-500 text-xs">{errors.email.message}</span>}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">
-                  Message <span className="text-gray-400 font-normal">(optional)</span>
-                </label>
-                <textarea
-                  {...register('message')}
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-lime-500 focus:ring-2 focus:ring-lime-200 outline-none transition-all resize-none text-sm"
-                  placeholder="Any specific questions or details you'd like to share?"
+                <Input
+                  label="Phone Number"
+                  required
+                  placeholder="9876543210"
+                  error={errors.phone?.message}
+                  className="bg-gray-50"
+                  {...register('phone', {
+                    required: 'Required',
+                    pattern: { value: /^[0-9]{10}$/, message: 'Invalid phone number' },
+                  })}
+                />
+                <Input
+                  label="Email Address"
+                  placeholder="john@example.com"
+                  error={errors.email?.message}
+                  className="bg-gray-50"
+                  {...register('email', {
+                    pattern: { value: /^\S+@\S+$/i, message: 'Invalid email' },
+                  })}
                 />
               </div>
 
-              <button
+              <Textarea
+                label="Message"
+                hint="optional"
+                placeholder="Any specific questions or details you'd like to share?"
+                rows={4}
+                className="bg-gray-50"
+                {...register('message')}
+              />
+
+              <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full btn-primary flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
+                fullWidth
+                className="mt-4"
               >
                 {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
                 {isSubmitting ? 'Sending…' : 'Send Message'}
-              </button>
+              </Button>
             </form>
           </div>
 

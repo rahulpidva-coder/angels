@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, CheckCircle2 } from 'lucide-react';
+import { Input } from '../ui';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -31,9 +32,10 @@ const EnquiryModal: React.FC<Props> = ({ isOpen, onClose }) => {
     consent: false,
   });
 
-  const [errors, setErrors] = useState({ mobile: '', ageGroup: '', consent: '' });
+  const [errors, setErrors] = useState({ mobile: '', ageGroup: '', childName: '', consent: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const selectedAge = useMemo(
     () => ageOptions.find((o) => o.value === form.ageGroup),
@@ -43,9 +45,10 @@ const EnquiryModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
   const reset = () => {
     setForm({ mobile: '', ageGroup: '', parentName: '', childName: '', consent: false });
-    setErrors({ mobile: '', ageGroup: '', consent: '' });
+    setErrors({ mobile: '', ageGroup: '', childName: '', consent: '' });
     setIsSubmitting(false);
     setIsSuccess(false);
+    setSubmitError('');
   };
 
   const handleClose = () => {
@@ -54,20 +57,22 @@ const EnquiryModal: React.FC<Props> = ({ isOpen, onClose }) => {
   };
 
   const validate = () => {
-    const e = { mobile: '', ageGroup: '', consent: '' };
+    const e = { mobile: '', ageGroup: '', childName: '', consent: '' };
     const m = form.mobile.replace(/\D/g, '');
     if (!m) e.mobile = 'Mobile number is required';
     else if (m.length < 10) e.mobile = 'Please enter a valid mobile number';
     if (!form.ageGroup) e.ageGroup = 'Please select child age';
+    if (!form.childName.trim()) e.childName = "Child's name is required";
     if (!form.consent) e.consent = 'Please allow WhatsApp updates to continue';
     setErrors(e);
-    return !e.mobile && !e.ageGroup && !e.consent;
+    return !e.mobile && !e.ageGroup && !e.childName && !e.consent;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
     setIsSubmitting(true);
+    setSubmitError('');
     try {
       const res = await fetch(`${API_BASE_URL}/api/enquiry`, {
         method: 'POST',
@@ -84,10 +89,10 @@ const EnquiryModal: React.FC<Props> = ({ isOpen, onClose }) => {
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.success) throw new Error(data.message || 'Failed');
+      if (!res.ok || !data.success) throw new Error('failed');
       setIsSuccess(true);
     } catch {
-      alert('Something went wrong. Please try again or contact us on WhatsApp.');
+      setSubmitError('We could not submit your enquiry right now. Please try again or reach us directly on WhatsApp.');
     } finally {
       setIsSubmitting(false);
     }
@@ -147,25 +152,19 @@ const EnquiryModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <form onSubmit={handleSubmit} className="space-y-4">
 
                   {/* Mobile */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Mobile Number <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      inputMode="numeric"
-                      placeholder="Your WhatsApp number"
-                      value={form.mobile}
-                      onChange={(e) => {
-                        setForm((p) => ({ ...p, mobile: e.target.value }));
-                        if (errors.mobile) setErrors((p) => ({ ...p, mobile: '' }));
-                      }}
-                      className="w-full rounded-xl border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-800 outline-none focus:border-lime-400 focus:ring-4 focus:ring-lime-100 transition"
-                    />
-                    {errors.mobile && (
-                      <p className="text-xs text-rose-500 mt-1">{errors.mobile}</p>
-                    )}
-                  </div>
+                  <Input
+                    label="Mobile Number"
+                    required
+                    type="tel"
+                    inputMode="numeric"
+                    placeholder="Your WhatsApp number"
+                    value={form.mobile}
+                    error={errors.mobile}
+                    onChange={(e) => {
+                      setForm((p) => ({ ...p, mobile: e.target.value }));
+                      if (errors.mobile) setErrors((p) => ({ ...p, mobile: '' }));
+                    }}
+                  />
 
                   {/* Age */}
                   <div>
@@ -202,7 +201,6 @@ const EnquiryModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     {errors.ageGroup && (
                       <p className="text-xs text-rose-500 mt-1">{errors.ageGroup}</p>
                     )}
-                    {/* Compact suggested program pill */}
                     {suggestedProgram && (
                       <p className="text-xs text-gray-500 mt-2">
                         Suggested program:{' '}
@@ -213,7 +211,7 @@ const EnquiryModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     )}
                   </div>
 
-                  {/* Optional names */}
+                  {/* Optional names — kept inline: text-xs labels differ from Input's text-sm */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-semibold text-gray-600 mb-1">
@@ -229,15 +227,21 @@ const EnquiryModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-gray-600 mb-1">
-                        Child Name <span className="font-normal text-gray-400">(optional)</span>
+                        Child Name <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="text"
                         placeholder="Child name"
                         value={form.childName}
-                        onChange={(e) => setForm((p) => ({ ...p, childName: e.target.value }))}
+                        onChange={(e) => {
+                          setForm((p) => ({ ...p, childName: e.target.value }));
+                          if (errors.childName) setErrors((p) => ({ ...p, childName: '' }));
+                        }}
                         className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-lime-400 focus:ring-4 focus:ring-lime-100 transition"
                       />
+                      {errors.childName && (
+                        <p className="text-xs text-rose-500 mt-1">{errors.childName}</p>
+                      )}
                     </div>
                   </div>
 
@@ -260,7 +264,14 @@ const EnquiryModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     <p className="text-xs text-rose-500 -mt-2">{errors.consent}</p>
                   )}
 
-                  {/* Submit */}
+                  {/* Submit error */}
+                  {submitError && (
+                    <div className="rounded-xl bg-rose-50 border border-rose-100 px-3.5 py-2.5 text-xs text-rose-600 leading-relaxed">
+                      {submitError}
+                    </div>
+                  )}
+
+                  {/* Submit — intentionally lime-600 (darker) to read as a form action, not a page CTA */}
                   <button
                     type="submit"
                     disabled={isSubmitting}
