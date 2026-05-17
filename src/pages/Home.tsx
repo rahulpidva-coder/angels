@@ -9,7 +9,6 @@ import { motion } from 'framer-motion';
 import { useModal } from '../context/ModalContext';
 import { Button, SectionHeader, Badge, Card } from '../components/ui';
 
-import { parentNotes } from '../data/parentNotes';
 import heroImage from '../assets/img_HomeHero.png';
 import heroNxt   from '../assets/img_HomeNext.png';
 import prg_Play  from '../assets/img_PlayHome.png';
@@ -17,6 +16,22 @@ import prg_Nur   from '../assets/home_nur.png';
 import prg_Jr    from '../assets/home_jr.png';
 import prg_Sr    from '../assets/home_sr.png';
 import trustImg  from '../assets/img_CalmTime.png';
+
+// Dynamic parent note photos — add images to src/assets/notes/ and they appear automatically
+const noteImgModules = import.meta.glob<{ default: string }>(
+  '../assets/notes/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}',
+  { eager: true }
+);
+const noteImages = Object.values(noteImgModules).map(m => m.default);
+const NOTE_ROTATIONS = ['rotate-3', '-rotate-3', 'rotate-2', '-rotate-2', 'rotate-3', '-rotate-2'];
+const NOTE_PINS = [
+  'from-rose-400 to-rose-600',
+  'from-sky-400 to-sky-600',
+  'from-amber-400 to-amber-600',
+  'from-emerald-400 to-emerald-600',
+  'from-violet-400 to-violet-600',
+  'from-rose-400 to-orange-500',
+];
 
 // ── Motion language system ────────────────────────────────────────────────────
 // Single expo-out curve: sharp initiation, luxurious deceleration tail
@@ -791,7 +806,7 @@ const Home = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="flex items-center justify-center gap-2 mb-12 flex-wrap text-sm"
+          className="flex items-center justify-center gap-2 mb-4 flex-wrap text-sm"
         >
           <div className="flex items-center gap-0.5">
             {[...Array(5)].map((_, i) => <Star key={i} size={13} className="text-yellow-400 fill-yellow-400" />)}
@@ -802,143 +817,66 @@ const Home = () => {
           <span className="text-gray-300 select-none">·</span>
         </motion.div>
 
-        {/* Editorial layout: featured left, two compact right */}
-        <div className="grid lg:grid-cols-2 gap-6 mb-14">
-
-          {/* Featured testimonial */}
-          <motion.div
-            variants={revealUpSlow}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            whileHover={{ y: -4, transition: { duration: 0.22, ease } }}
-            className="h-full"
-          >
-            <div className="bg-white rounded-3xl border border-gray-100 shadow-lg p-8 h-full flex flex-col">
-              <p className="text-[5rem] leading-none text-lime-100 -mb-3 select-none font-serif">{'“'}</p>
-              <p className="text-gray-700 leading-relaxed text-lg flex-1 mb-6">
-                Aarav used to cling to me at drop-off. By the third week at Angels, he was
-                running in ahead of me. That moment told me everything I needed to know
-                about this school.
-              </p>
-              <div className="flex items-center gap-0.5 mb-5">
-                {[...Array(5)].map((_, i) => <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />)}
+        {/* ── In Their Own Words — pinned photo notes marquee ── */}
+        {noteImages.length > 0 && (
+          <>
+            <motion.div
+              variants={revealUpSlow}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="mt-14 mb-10"
+            >
+              <div className="flex items-center gap-6">
+                <div className="h-px flex-1 bg-gray-200 rounded-full" />
+                <div className="text-center shrink-0">
+                  <p className="text-[10px] font-bold tracking-[0.28em] uppercase text-lime-600 mb-1.5">Parent Voices</p>
+                  <p className="text-lg font-heading font-semibold text-gray-700">In Their Own Words</p>
+                </div>
+                <div className="h-px flex-1 bg-gray-200 rounded-full" />
               </div>
-              <div className="border-t border-gray-100 pt-5 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-lime-100 flex items-center justify-center shrink-0">
-                  <span className="text-xs font-bold text-lime-700">PS</span>
-                </div>
-                <div>
-                  <p className="font-bold text-gray-800 leading-none">Priya Sharma</p>
-                  <p className="text-sm text-lime-600 mt-0.5">Mother · Aarav, Sr. KG</p>
-                </div>
+            </motion.div>
+
+            <div className="overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8 pt-6 pb-14">
+              <div className="notes-marquee flex gap-10" style={{ width: 'max-content' }}>
+                {(() => {
+                  const minCards = 8;
+                  const repeatCount = Math.ceil(minCards / noteImages.length);
+                  const base = Array.from({ length: repeatCount }).flatMap(() => noteImages);
+                  return [...base, ...base];
+                })().map((url, i) => {
+                  const rotation = NOTE_ROTATIONS[i % NOTE_ROTATIONS.length];
+                  const pin = NOTE_PINS[i % NOTE_PINS.length];
+                  return (
+                    <div
+                      key={i}
+                      className={`relative shrink-0 w-[320px] ${rotation} hover:rotate-0 transition-transform duration-500 cursor-default`}
+                      style={{ filter: 'drop-shadow(3px 8px 18px rgba(0,0,0,0.20))' }}
+                    >
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
+                        <div className={`w-[18px] h-[18px] rounded-full bg-gradient-to-br ${pin} border-2 border-white/40`} />
+                        <div className="w-[3px] h-3 bg-gray-700/50 rounded-b-sm -mt-0.5" />
+                      </div>
+                      <div
+                        className="overflow-hidden"
+                        style={{
+                          clipPath: 'polygon(0% 7%, 3% 3%, 7% 6%, 11% 2%, 15% 5%, 19% 1%, 23% 4%, 27% 0%, 31% 4%, 35% 1%, 39% 5%, 43% 2%, 47% 6%, 51% 3%, 55% 7%, 59% 4%, 63% 8%, 67% 5%, 71% 2%, 75% 6%, 79% 3%, 83% 7%, 87% 4%, 91% 1%, 95% 5%, 100% 3%, 100% 100%, 0% 100%)',
+                        }}
+                      >
+                        <img
+                          src={url}
+                          alt="Parent handwritten note"
+                          className="w-full h-[360px] object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          </motion.div>
-
-          {/* Two compact testimonials stacked */}
-          <motion.div
-            className="flex flex-col gap-6"
-            variants={staggerMd}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {[
-              {
-                initials: 'RM', name: 'Rahul Mehta', role: 'Father · Vihaan, Nursery',
-                text: "The shift in Vihaan's confidence was noticeable within months — not just manners, but a quiet self-assurance in how he carries himself every day.",
-              },
-              {
-                initials: 'AD', name: 'Anita Desai', role: 'Mother · Zara, Playgroup',
-                text: "As a working parent, finding Angels was a genuine relief. I leave for work knowing my daughter is safe, loved, and fully engaged — every single day.",
-              },
-            ].map((t, i) => (
-              <motion.div
-                key={i}
-                variants={revealUp}
-                whileHover={{ y: -3, transition: { duration: 0.22, ease } }}
-                className="flex-1"
-              >
-                <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 h-full flex flex-col">
-                  <p className="text-[3rem] leading-none text-lime-100 -mb-1 select-none font-serif">{'“'}</p>
-                  <p className="text-gray-600 leading-relaxed text-sm flex-1 mb-4">{t.text}</p>
-                  <div className="flex items-center gap-0.5 mb-4">
-                    {[...Array(5)].map((_, i) => <Star key={i} size={12} className="text-yellow-400 fill-yellow-400" />)}
-                  </div>
-                  <div className="border-t border-gray-100 pt-4 flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-lime-50 border border-lime-100 flex items-center justify-center shrink-0">
-                      <span className="text-[10px] font-bold text-lime-700">{t.initials}</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-gray-800 leading-none">{t.name}</p>
-                      <p className="text-xs text-lime-600 mt-0.5">{t.role}</p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* ── In Their Own Words — pinned notes marquee ── */}
-        <motion.div
-          variants={revealUpSlow}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="mt-16 mb-4"
-        >
-          {/* Editorial separator */}
-          <div className="flex items-center gap-4 mb-14">
-            <div className="h-px flex-1 bg-gray-200/80 rounded-full" />
-            <p className="text-[11px] font-bold text-gray-400 tracking-[0.3em] uppercase whitespace-nowrap">In Their Own Words</p>
-            <div className="h-px flex-1 bg-gray-200/80 rounded-full" />
-          </div>
-        </motion.div>
-
-        {/* Full-width marquee — overflows section padding intentionally */}
-        <div className="overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8 pt-6 pb-14">
-          <div className="notes-marquee flex gap-10" style={{ width: 'max-content' }}>
-            {[...parentNotes, ...parentNotes].map((note, i) => (
-              <div
-                key={i}
-                className={`relative shrink-0 w-[248px] ${note.rotation} hover:rotate-0 transition-transform duration-500 cursor-default`}
-                style={{ filter: 'drop-shadow(3px 8px 18px rgba(0,0,0,0.20))' }}
-              >
-                {/* Thumbtack pin — coloured per note */}
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
-                  <div className={`w-[18px] h-[18px] rounded-full bg-gradient-to-br ${note.pin} border-2 border-white/40`} />
-                  <div className="w-[3px] h-3 bg-gray-700/50 rounded-b-sm -mt-0.5" />
-                </div>
-
-                {/* Torn notebook paper */}
-                <div
-                  className="relative overflow-hidden pt-8 pb-5"
-                  style={{
-                    backgroundColor: note.bg,
-                    clipPath: 'polygon(0% 7%, 3% 3%, 7% 6%, 11% 2%, 15% 5%, 19% 1%, 23% 4%, 27% 0%, 31% 4%, 35% 1%, 39% 5%, 43% 2%, 47% 6%, 51% 3%, 55% 7%, 59% 4%, 63% 8%, 67% 5%, 71% 2%, 75% 6%, 79% 3%, 83% 7%, 87% 4%, 91% 1%, 95% 5%, 100% 3%, 100% 100%, 0% 100%)',
-                    backgroundImage: 'repeating-linear-gradient(transparent 0px, transparent 27px, rgba(180,190,220,0.22) 27px, rgba(180,190,220,0.22) 28px)',
-                    backgroundPositionY: '44px',
-                  }}
-                >
-                  {/* Red margin rule */}
-                  <div className="absolute left-9 top-0 bottom-0 w-px bg-rose-200/55" />
-                  {/* Handwritten content */}
-                  <div className="pl-11 pr-4 flex flex-col min-h-[200px]">
-                    <p className="font-handwriting text-[17px] text-gray-700 leading-[28px] flex-1 mb-4">
-                      "{note.text}"
-                    </p>
-                    <div className="pt-2 border-t border-gray-200/40">
-                      <p className="font-handwriting text-[14px] text-gray-600 leading-tight">— {note.name}</p>
-                      <p className="font-handwriting text-[12px] text-lime-600 mt-0.5">{note.program}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+          </>
+        )}
 
         {/* CTA block */}
         <motion.div
