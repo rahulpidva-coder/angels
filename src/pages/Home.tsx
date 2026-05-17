@@ -2,13 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Heart, Shield, BookOpen, Clock, MessageCircle,
-  ChevronRight, Star, Users, Award, PencilLine,
+  ChevronRight, Star, Users, PencilLine,
   PartyPopper, Shapes, Calendar,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useModal } from '../context/ModalContext';
 import { Button, SectionHeader, Badge, Card } from '../components/ui';
 
+import { parentNotes } from '../data/parentNotes';
 import heroImage from '../assets/img_HomeHero.png';
 import heroNxt   from '../assets/img_HomeNext.png';
 import prg_Play  from '../assets/img_PlayHome.png';
@@ -17,15 +18,25 @@ import prg_Jr    from '../assets/home_jr.png';
 import prg_Sr    from '../assets/home_sr.png';
 import trustImg  from '../assets/img_CalmTime.png';
 
-// ── Hero entrance animation variants ────────────────────────────────────────
-const heroContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.11, delayChildren: 0.05 } },
-};
-const heroItem = {
-  hidden:  { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
-};
+// ── Motion language system ────────────────────────────────────────────────────
+// Single expo-out curve: sharp initiation, luxurious deceleration tail
+const ease = [0.16, 1, 0.3, 1];
+
+// Named reveal variants — used consistently across all sections
+const revealUp     = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease } } };
+const revealUpSlow = { hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0, transition: { duration: 0.85, ease } } };
+
+// Image entry — subtle Ken Burns zoom-out as the photo "develops" into the frame
+const imgReveal    = { hidden: { opacity: 0, scale: 1.06 }, visible: { opacity: 1, scale: 1, transition: { duration: 1.1, ease } } };
+
+// Stagger containers — three deliberate speeds
+const staggerSm = { hidden: {}, visible: { transition: { staggerChildren: 0.07 } } };
+const staggerMd = { hidden: {}, visible: { transition: { staggerChildren: 0.12 } } };
+const staggerLg = { hidden: {}, visible: { transition: { staggerChildren: 0.16 } } };
+
+// Hero (fires on mount, not scroll; retains slight delay between children)
+const heroContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.10, delayChildren: 0.08 } } };
+const heroItem      = { hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0, transition: { duration: 0.72, ease } } };
 
 type AdmissionStatus = 'OPEN' | 'LIMITED' | 'CONNECT';
 const ADMISSION_STATUS: AdmissionStatus = 'OPEN';
@@ -42,7 +53,7 @@ const Home = () => {
   const trustPillars = [
     {
       icon: Clock, title: '25+ Years of Steady Care',
-      desc: 'A legacy of consistency that Ghatkopar families have relied upon — generation after generation, since 1998.',
+      desc: 'A legacy of consistency that families have relied upon — generation after generation, since 1998.',
       color: 'bg-yellow-100 text-yellow-600', gradient: 'from-yellow-50/60 to-white', border: 'border-yellow-100/80', accent: 'bg-yellow-400', link: '/about',
     },
     {
@@ -152,20 +163,23 @@ const Home = () => {
 
             {/* ── Right: image column ── */}
             <motion.div
-              initial={{ opacity: 0, x: 36, scale: 0.97 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ duration: 0.9, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 28, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.95, delay: 0.15, ease }}
               className="order-1 lg:order-2 relative"
             >
               {/* Ambient glow behind the frame */}
               <div className="pointer-events-none absolute inset-[-12px] rounded-[2.5rem] bg-lime-200/30 blur-3xl" />
 
-              {/* Hero image — cover fill; swap in a portrait image for best results */}
+              {/* Hero image — Ken Burns entry: image develops into the frame */}
               <div className="relative border-4 border-white rounded-[2rem] shadow-2xl overflow-hidden min-h-[380px] sm:min-h-[520px] lg:min-h-[640px]">
-                <img
+                <motion.img
                   src={heroImage}
                   alt="Children learning joyfully at Angels Preschool"
                   className="absolute inset-0 w-full h-full object-cover"
+                  initial={{ scale: 1.07 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 1.6, delay: 0.15, ease }}
                 />
                 {/* Subtle depth gradient at base of image */}
                 <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/20 to-transparent" />
@@ -225,9 +239,9 @@ const Home = () => {
 
         {/* ── Act I: Editorial opening — section roots, clean and authoritative ── */}
         <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.52 }}
+          variants={revealUpSlow}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
           className="mb-16 lg:mb-20"
         >
@@ -245,15 +259,15 @@ const Home = () => {
 
           {/* LEFT: numbered trust pillars — each one a chapter, not a list item */}
           <motion.div
+            variants={staggerLg}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
           >
             {trustPillars.map((item, i) => (
               <motion.div
                 key={i}
-                variants={{ hidden: { opacity: 0, y: 28 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55 } } }}
+                variants={revealUp}
                 className="relative"
               >
                 {/* Editorial number — background watermark; depth without noise */}
@@ -287,20 +301,25 @@ const Home = () => {
 
           {/* RIGHT: portrait image — immersive, artfully framed */}
           <motion.div
-            initial={{ opacity: 0, x: 28 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.65, delay: 0.18 }}
+            variants={revealUp}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
             className="relative order-first lg:order-last"
           >
             {/* Warm offset shadow frame */}
             <div className="absolute -bottom-5 -right-5 w-full h-full rounded-[2rem] bg-lime-100/60 pointer-events-none" />
 
+            {/* overflow-hidden clips the imgReveal scale — photo developing into frame */}
             <div className="relative rounded-[2rem] overflow-hidden shadow-2xl">
-              <img
+              <motion.img
                 src={trustImg}
                 alt="A nurturing moment at Angels Preschool"
                 className="w-full aspect-[3/4] object-cover"
+                variants={imgReveal}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
             </div>
@@ -309,7 +328,7 @@ const Home = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.88 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.48, duration: 0.38 }}
+              transition={{ delay: 0.5, duration: 0.45, ease }}
               viewport={{ once: true }}
               className="absolute -top-5 -left-5 bg-white rounded-2xl px-4 py-3 shadow-xl border border-gray-100"
             >
@@ -319,9 +338,9 @@ const Home = () => {
 
             {/* Floating trust signal */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.42 }}
+              transition={{ delay: 0.65, duration: 0.5, ease }}
               viewport={{ once: true }}
               className="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-sm rounded-2xl px-5 py-4 shadow-xl border border-white/60"
             >
@@ -338,9 +357,9 @@ const Home = () => {
 
         {/* ── Act III: The Angels Promise — the emotional climax of the section ── */}
         <motion.div
-          initial={{ opacity: 0, y: 36 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.62 }}
+          variants={revealUpSlow}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
           className="mt-24 lg:mt-32"
         >
@@ -366,25 +385,37 @@ const Home = () => {
                 <div className="h-px w-12 bg-lime-300/80 rounded-full" />
               </div>
 
-              {/* The promise — centered stage moment, the section's emotional peak */}
-              <p className="text-2xl md:text-3xl lg:text-[34px] font-heading font-semibold text-gray-800 leading-relaxed text-center max-w-3xl mx-auto mb-12">
+              {/* The promise — blur-to-clear reveal: text comes into focus as it enters */}
+              <motion.p
+                initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
+                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                transition={{ duration: 0.95, ease, delay: 0.12 }}
+                viewport={{ once: true }}
+                className="text-2xl md:text-3xl lg:text-[34px] font-heading font-semibold text-gray-800 leading-relaxed text-center max-w-3xl mx-auto mb-12"
+              >
                 Before your child moves on from Angels, they will carry{' '}
                 <span className="text-lime-700">
                   discipline, handwriting confidence, and a strong academic foundation
                 </span>{' '}
                 that primary schools notice — and the joyful, irreplaceable memories
                 of their very first school.
-              </p>
+              </motion.p>
 
-              {/* Outcome markers — minimal pills, warmth not clutter */}
-              <div className="flex flex-wrap justify-center gap-3">
+              {/* Outcome markers — staggered pill entry */}
+              <motion.div
+                className="flex flex-wrap justify-center gap-3"
+                variants={staggerSm}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+              >
                 {trustFeatures.map((feat, i) => (
-                  <div key={i} className="flex items-center gap-2.5 bg-white rounded-full px-4 py-2.5 border border-gray-100 shadow-sm">
+                  <motion.div key={i} variants={revealUp} className="flex items-center gap-2.5 bg-white rounded-full px-4 py-2.5 border border-gray-100 shadow-sm">
                     <div className={`w-1.5 h-1.5 rounded-full ${feat.dot}`} />
                     <span className="text-[13px] font-semibold text-gray-700">{feat.title}</span>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
 
             </div>
           </div>
@@ -392,114 +423,357 @@ const Home = () => {
 
       </section>
 
-      {/* PROGRAMS SNAPSHOT */}
+      {/* ── OUR PROGRAMS ─────────────────────────────────────────────────── */}
       <section className="bg-lime-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-            <SectionHeader
-              title="Our Programs"
-              subtitle="Carefully designed programs that support your child's emotional, social, and learning development at every stage."
-              align="left"
-              size="sm"
-            />
-            <Link to="/programs" className="text-lime-600 font-bold hover:text-lime-700 flex items-center gap-1 shrink-0">
-              View All Programs <ChevronRight size={20} />
-            </Link>
-          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: 'Playgroup', age: '1.5+ years', desc: 'A gentle and nurturing first step away from home.',                        img: prg_Play, color: 'border-red-400',    anchor: '/programs#playgroup' },
-              { title: 'Nursery',   age: '3+ years',   desc: 'Building confidence, communication, and early skills.',                    img: prg_Nur,  color: 'border-yellow-400', anchor: '/programs#nursery'   },
-              { title: 'Jr. KG',    age: '4+ years',   desc: 'Introducing structured learning through fun activities.',                  img: prg_Jr,   color: 'border-cyan-400',   anchor: '/programs#jrkg'      },
-              { title: 'Sr. KG',    age: '5+ years',   desc: 'Preparing children for a smooth transition to formal schooling.',          img: prg_Sr,   color: 'border-lime-400',   anchor: '/programs#srkg'      },
-            ].map((prog, idx) => (
-              <Link to={prog.anchor} key={idx} className="group">
-                <Card
-                  padding="none"
-                  className={`overflow-hidden hover:shadow-xl border-b-4 ${prog.color} h-full`}
-                >
-                  <div className="h-48 overflow-hidden">
-                    <img src={prog.img} alt={prog.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-1">{prog.title}</h3>
-                    <p className="text-sm text-lime-700 font-semibold mb-3">{prog.age}</p>
-                    <p className="text-sm text-gray-600 leading-relaxed">{prog.desc}</p>
-                  </div>
-                </Card>
+          {/* Header row */}
+          <div className="flex flex-col md:flex-row justify-between items-end mb-5 gap-6">
+            <motion.div
+              variants={revealUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-widest uppercase text-lime-700 bg-white/80 border border-lime-200/50 px-4 py-1.5 rounded-full mb-4">
+                Playgroup through Senior KG
+              </span>
+              <SectionHeader
+                title="Our Programs"
+                subtitle="Four thoughtfully designed stages — each one meeting your child exactly where they are, and growing them toward where they need to be."
+                align="left"
+                size="sm"
+                className="mb-0"
+              />
+            </motion.div>
+            <motion.div
+              variants={revealUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              <Link to="/programs" className="text-lime-600 font-bold hover:text-lime-700 flex items-center gap-1.5 group shrink-0">
+                View All Programs
+                <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
-            ))}
+            </motion.div>
           </div>
 
-          <div className="mt-12">
-            <div className="max-w-4xl mx-auto rounded-3xl bg-white/80 backdrop-blur border border-lime-100 shadow-lg px-8 py-7 text-center">
-              <p className="text-xl md:text-2xl font-heading font-semibold text-gray-800 leading-relaxed">
-                Each program is designed to build{' '}
-                <span className="text-lime-700 font-bold">confidence</span>,{' '}
-                <span className="text-lime-700 font-bold">independence</span>, and a{' '}
-                <span className="text-lime-700 font-bold">love for learning</span>.
+          {/* Journey progression indicator — desktop editorial timeline */}
+          <motion.div
+            className="hidden lg:flex items-start mb-12 mt-8"
+            variants={revealUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {[
+              { label: 'Playgroup', dot: 'bg-orange-400' },
+              { label: 'Nursery',   dot: 'bg-yellow-400' },
+              { label: 'Jr. KG',    dot: 'bg-sky-400'    },
+              { label: 'Sr. KG',    dot: 'bg-lime-500'   },
+            ].map((s, i) => (
+              <React.Fragment key={s.label}>
+                <div className="flex flex-col items-center gap-1.5 shrink-0">
+                  <div className={`w-2 h-2 rounded-full mt-0.5 ${s.dot}`} />
+                  <span className="text-[10px] font-bold text-gray-400 tracking-[0.15em] uppercase">{s.label}</span>
+                </div>
+                {i < 3 && <div className="flex-1 h-px bg-gray-200/80 mx-5 mt-1" />}
+              </React.Fragment>
+            ))}
+          </motion.div>
+
+          {/* Program cards */}
+          <motion.div
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+            variants={staggerMd}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {[
+              {
+                title: 'Playgroup', age: '1.5+ years',
+                desc: 'A gentle, nurturing first step away from home — where your child discovers the joy of a world beyond you.',
+                img: prg_Play,
+                badge: 'bg-orange-50/90 text-orange-700 border border-orange-200/50',
+                bar:   'bg-orange-200',
+                anchor: '/programs#playgroup',
+              },
+              {
+                title: 'Nursery', age: '3+ years',
+                desc: 'Building confidence, communication, and early skills through play, rhythm, and warm daily routines.',
+                img: prg_Nur,
+                badge: 'bg-yellow-50/90 text-yellow-700 border border-yellow-200/50',
+                bar:   'bg-yellow-200',
+                anchor: '/programs#nursery',
+              },
+              {
+                title: 'Jr. KG', age: '4+ years',
+                desc: 'Structured learning through activities designed to build curiosity, focus, and a love of discovery.',
+                img: prg_Jr,
+                badge: 'bg-sky-50/90 text-sky-700 border border-sky-200/50',
+                bar:   'bg-sky-200',
+                anchor: '/programs#jrkg',
+              },
+              {
+                title: 'Sr. KG', age: '5+ years',
+                desc: 'Preparing children for a smooth, confident transition to formal schooling — ready in every way that matters.',
+                img: prg_Sr,
+                badge: 'bg-lime-50/90 text-lime-700 border border-lime-200/50',
+                bar:   'bg-lime-300',
+                anchor: '/programs#srkg',
+              },
+            ].map((prog, idx) => (
+              <motion.div
+                key={idx}
+                variants={revealUp}
+                whileHover={{ y: -5, transition: { duration: 0.22, ease } }}
+              >
+                <Link to={prog.anchor} className="group block h-full">
+                  <div className="bg-white rounded-3xl overflow-hidden border border-gray-100/80 shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+
+                    {/* Image — photography-forward with editorial overlays */}
+                    <div className="relative h-56 overflow-hidden shrink-0">
+                      <motion.img
+                        src={prog.img}
+                        alt={`${prog.title} at Angels Preschool`}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        variants={imgReveal}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                      />
+                      {/* Depth gradient for overlay legibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent pointer-events-none" />
+                      {/* Stage number — top-right editorial marker */}
+                      <span className="absolute top-4 right-4 text-white/70 text-[11px] font-bold tracking-[0.2em]">
+                        0{idx + 1}
+                      </span>
+                      {/* Age badge — bottom-left, glassy, colour-coded to stage */}
+                      <div className="absolute bottom-4 left-4">
+                        <span className={`inline-flex items-center ${prog.badge} text-[11px] font-bold px-3 py-1.5 rounded-full backdrop-blur-sm shadow-sm`}>
+                          {prog.age}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 flex flex-col px-6 pt-5 pb-6">
+                      <h3 className="text-xl font-heading font-bold text-gray-800 mb-2.5 leading-snug group-hover:text-lime-700 transition-colors duration-200">
+                        {prog.title}
+                      </h3>
+                      <p className="text-sm text-gray-600 leading-relaxed flex-1 mb-4">{prog.desc}</p>
+                      {/* Micro CTA — reveals on hover */}
+                      <div className="flex items-center gap-1.5 text-[12px] font-semibold text-lime-600 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200">
+                        <span>Explore program</span>
+                        <ChevronRight size={13} />
+                      </div>
+                    </div>
+
+                    {/* Stage colour accent — refined 2px bottom line */}
+                    <div className={`h-0.5 ${prog.bar} shrink-0`} />
+
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Journey closing statement */}
+          <motion.div
+            className="mt-14"
+            variants={revealUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <div className="max-w-3xl mx-auto rounded-3xl bg-white/80 backdrop-blur border border-lime-100/80 shadow-sm px-8 py-8 text-center">
+              <p className="text-xl md:text-2xl font-heading font-semibold text-gray-800 leading-relaxed mb-5">
+                Each stage grows naturally into the next — a carefully held journey from{' '}
+                <span className="text-lime-700">first-day courage</span>{' '}
+                to{' '}
+                <span className="text-lime-700">school-ready confidence</span>.
               </p>
+              <Link
+                to="/programs"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-lime-600 hover:text-lime-700 group"
+              >
+                Explore all four programs
+                <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform duration-200" />
+              </Link>
             </div>
-          </div>
+          </motion.div>
+
         </div>
       </section>
 
-      {/* THE ANGELS EXPERIENCE */}
+      {/* ── THE ANGELS EXPERIENCE ────────────────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative bg-gradient-to-br from-lime-50 via-emerald-50 to-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden px-8 py-12 md:px-12 md:py-16 mt-8">
-          <div className="pointer-events-none absolute -top-20 -right-10 w-60 h-60 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30" />
-          <div className="pointer-events-none absolute -bottom-24 -left-10 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30" />
 
-          <div className="relative grid lg:grid-cols-2 gap-10 items-center">
-            <div className="space-y-6">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 text-xs font-semibold text-lime-700 shadow-sm">
-                💛 Since 1998 · Angels Preschool
-              </span>
-              <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-800">
-                The Angels Experience
-              </h2>
-              <p className="text-gray-700 leading-relaxed">
-                Every child who walks into Angels is welcomed into a warm, steady space — familiar faces, gentle routines, and a loving atmosphere that feels like an extension of home.
+        {/* ── Act I: Editorial opening — restrained, poetic, authoritative ── */}
+        <motion.div
+          variants={revealUpSlow}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="mb-16 lg:mb-20"
+        >
+          <div className="mb-6">
+            <span className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-widest uppercase text-lime-700 bg-lime-50 border border-lime-200/60 px-4 py-2 rounded-full">
+              Since 1998 · Ghatkopar, Mumbai
+            </span>
+          </div>
+          <SectionHeader
+            title="The Angels Experience"
+            align="left"
+            size="sm"
+            className="mb-5"
+          />
+          <p className="text-xl md:text-2xl font-heading font-semibold text-gray-700 leading-relaxed max-w-2xl">
+            Every morning, something quiet and remarkable happens — your child
+            walks through our doors, and{' '}
+            <span className="text-lime-700">feels completely at home</span>.
+          </p>
+        </motion.div>
+
+        {/* ── Act II: Immersive composition — cinematic image + emotional truths ── */}
+        <div className="grid lg:grid-cols-[3fr_2fr] gap-10 lg:gap-14 items-stretch mb-16 lg:mb-24">
+
+          {/* LEFT: Cinematic photograph — the emotional centrepiece */}
+          <motion.div
+            variants={revealUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="relative rounded-[2.5rem] overflow-hidden min-h-[360px] lg:min-h-[560px]"
+          >
+            {/* Ken Burns image reveal — photo develops into the frame */}
+            <motion.img
+              src={heroNxt}
+              alt="Children enjoying a warm, joyful day at Angels Preschool"
+              className="absolute inset-0 w-full h-full object-cover"
+              variants={imgReveal}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            />
+
+            {/* Depth gradients — cinematic base + warm top-corner atmosphere */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/5 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-300/10 via-transparent to-transparent" />
+
+            {/* Editorial parent quote — the voice that lives inside the photograph */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.45, ease }}
+              viewport={{ once: true }}
+              className="absolute bottom-0 left-0 right-0 px-8 py-10"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="h-px w-8 bg-lime-400/70 rounded-full" />
+                <p className="text-[10px] font-bold text-white/50 tracking-[0.3em] uppercase">A parent's words</p>
+              </div>
+              <p className="text-white font-heading font-semibold text-2xl md:text-[26px] leading-snug max-w-sm">
+                "By the third week, she was running in ahead of me."
               </p>
-              <div className="space-y-4">
-                {[
-                  { icon: Heart, title: 'Every child is known personally',    desc: "Teachers know each child's little habits, fears, and joys, and respond with patience and genuine care." },
-                  { icon: Users, title: 'A stable, experienced team',          desc: 'Many of our teachers have been with us for years, creating a consistent and comforting environment.'       },
-                  { icon: Star,  title: 'Values woven into everyday moments',  desc: 'Sharing toys, saying thank you, waiting for their turn — small daily habits that shape who they become.'  },
-                ].map(({ icon: Icon, title, desc }) => (
-                  <div key={title} className="flex gap-3">
-                    <div className="mt-1 flex h-9 w-9 items-center justify-center rounded-2xl bg-white shadow">
-                      <Icon className="text-lime-600" size={18} />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-800">{title}</h3>
-                      <p className="text-sm text-gray-600">{desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            </motion.div>
 
-            <motion.div className="relative" initial={{ opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.6 }}>
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-8 border-white bg-white">
-                <img src={heroNxt} alt="Children enjoying their day at Angels Preschool" className="w-full h-full object-cover" />
-              </div>
-              <div className="absolute -bottom-6 left-4 sm:left-6 bg-white/95 backdrop-blur rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3">
-                <div className="h-9 w-9 rounded-xl bg-lime-100 flex items-center justify-center">
-                  <Award className="text-lime-600" size={20} />
-                </div>
-                <div className="text-xs sm:text-sm">
-                  <p className="font-semibold text-gray-800">2000+ Happy Children</p>
-                  <p className="text-[11px] text-gray-500">Trusted by parents. Loved by children.</p>
-                </div>
-              </div>
-              <div className="absolute -top-5 right-4 sm:right-6 bg-lime-600 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-full shadow-lg">
-                25+ Years of Angels
-              </div>
+            {/* Year marker — glass pill, top-right — matches hero float */}
+            <motion.div
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut', delay: 0.7 }}
+              className="absolute top-6 right-6 bg-white/60 backdrop-blur-lg rounded-2xl shadow-xl px-4 py-3 border border-white/40 text-center"
+            >
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Est.</p>
+              <p className="text-2xl font-heading font-bold text-lime-600 leading-none mt-0.5">1998</p>
+            </motion.div>
+          </motion.div>
+
+          {/* RIGHT: Three emotional moments — authentic, editorial, quietly hierarchical */}
+          <motion.div
+            variants={staggerLg}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="flex flex-col justify-center"
+          >
+            {[
+              {
+                accent: 'bg-amber-300',
+                accentW: 'w-10',
+                headingSz: 'text-2xl lg:text-[26px]',
+                title: 'Every child is known personally',
+                body: "Teachers know each child's little habits, fears, and joys, and respond with patience and genuine care.",
+                subtleClause: undefined as string | undefined,
+              },
+              {
+                accent: 'bg-rose-300',
+                accentW: 'w-7',
+                headingSz: 'text-xl lg:text-2xl',
+                title: 'A stable, experienced team',
+                body: 'Many of our teachers have been with us for years, creating a consistent and comforting environment.',
+                subtleClause: undefined as string | undefined,
+              },
+              {
+                accent: 'bg-lime-400',
+                accentW: 'w-5',
+                headingSz: 'text-xl',
+                title: 'Values woven into everyday moments',
+                body: 'Sharing toys, saying thank you, waiting for their turn',
+                subtleClause: '— small daily habits that shape who they become.' as string | undefined,
+              },
+            ].map((moment, i) => (
+              <motion.div
+                key={i}
+                variants={revealUp}
+                className={`${i === 0 ? 'pb-10 lg:pb-12' : i === 1 ? 'py-10 lg:py-12' : 'pt-10 lg:pt-12'} ${i < 2 ? 'border-b border-gray-100' : ''}`}
+              >
+                <div className={`${moment.accentW} h-0.5 ${moment.accent} rounded-full mb-5`} />
+                <h3 className={`${moment.headingSz} font-heading font-bold text-gray-800 mb-3 leading-snug`}>
+                  {moment.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {moment.body}
+                  {moment.subtleClause && (
+                    <> <span className="text-lime-700 font-semibold">{moment.subtleClause}</span></>
+                  )}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* ── Act III: The closing belief — editorial strip, open composition ── */}
+        <div className="border-t border-gray-100 pt-12 lg:pt-16 pb-4 lg:pb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-16">
+            <motion.p
+              initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.95, ease, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="text-xl md:text-2xl font-heading font-semibold text-gray-800 leading-snug max-w-2xl"
+            >
+              When parents tell us{' '}
+              <span className="text-lime-700">"I wish I'd found Angels sooner"</span>
+              {' '}— that is the experience we have been quietly building since 1998.
+            </motion.p>
+            <motion.div
+              variants={revealUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="shrink-0"
+            >
+              <Button variant="sky-outline" size="lg" onClick={openVisitModal}>
+                <Calendar size={18} />
+                Come see it for yourself
+              </Button>
             </motion.div>
           </div>
         </div>
+
       </section>
 
       {/* ── PARENT VOICES ─────────────────────────────────────────────────── */}
@@ -513,9 +787,9 @@ const Home = () => {
 
         {/* Social proof anchor */}
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
+          variants={revealUp}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
           className="flex items-center justify-center gap-2 mb-12 flex-wrap text-sm"
         >
@@ -526,7 +800,6 @@ const Home = () => {
           <span className="text-gray-300 select-none">·</span>
           <span className="text-gray-500">200+ parent reviews</span>
           <span className="text-gray-300 select-none">·</span>
-          <span className="text-gray-500">Ghatkopar, Mumbai</span>
         </motion.div>
 
         {/* Editorial layout: featured left, two compact right */}
@@ -534,11 +807,11 @@ const Home = () => {
 
           {/* Featured testimonial */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            variants={revealUpSlow}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            whileHover={{ y: -4 }}
+            whileHover={{ y: -4, transition: { duration: 0.22, ease } }}
             className="h-full"
           >
             <div className="bg-white rounded-3xl border border-gray-100 shadow-lg p-8 h-full flex flex-col">
@@ -566,10 +839,10 @@ const Home = () => {
           {/* Two compact testimonials stacked */}
           <motion.div
             className="flex flex-col gap-6"
+            variants={staggerMd}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.13 } } }}
           >
             {[
               {
@@ -583,8 +856,8 @@ const Home = () => {
             ].map((t, i) => (
               <motion.div
                 key={i}
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.45 } } }}
-                whileHover={{ y: -3 }}
+                variants={revealUp}
+                whileHover={{ y: -3, transition: { duration: 0.22, ease } }}
                 className="flex-1"
               >
                 <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 h-full flex flex-col">
@@ -608,10 +881,75 @@ const Home = () => {
           </motion.div>
         </div>
 
+        {/* ── In Their Own Words — pinned notes marquee ── */}
+        <motion.div
+          variants={revealUpSlow}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="mt-16 mb-4"
+        >
+          {/* Editorial separator */}
+          <div className="flex items-center gap-4 mb-14">
+            <div className="h-px flex-1 bg-gray-200/80 rounded-full" />
+            <p className="text-[11px] font-bold text-gray-400 tracking-[0.3em] uppercase whitespace-nowrap">In Their Own Words</p>
+            <div className="h-px flex-1 bg-gray-200/80 rounded-full" />
+          </div>
+        </motion.div>
+
+        {/* Full-width marquee — overflows section padding intentionally */}
+        <div className="overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8 pt-6 pb-14">
+          <div className="notes-marquee flex gap-10" style={{ width: 'max-content' }}>
+            {[...parentNotes, ...parentNotes].map((note, i) => (
+              <div
+                key={i}
+                className={`relative shrink-0 w-[248px] ${note.rotation} hover:rotate-0 transition-transform duration-500 cursor-default`}
+                style={{ filter: 'drop-shadow(3px 8px 18px rgba(0,0,0,0.20))' }}
+              >
+                {/* Thumbtack pin — coloured per note */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
+                  <div className={`w-[18px] h-[18px] rounded-full bg-gradient-to-br ${note.pin} border-2 border-white/40`} />
+                  <div className="w-[3px] h-3 bg-gray-700/50 rounded-b-sm -mt-0.5" />
+                </div>
+
+                {/* Torn notebook paper */}
+                <div
+                  className="relative overflow-hidden pt-8 pb-5"
+                  style={{
+                    backgroundColor: note.bg,
+                    clipPath: 'polygon(0% 7%, 3% 3%, 7% 6%, 11% 2%, 15% 5%, 19% 1%, 23% 4%, 27% 0%, 31% 4%, 35% 1%, 39% 5%, 43% 2%, 47% 6%, 51% 3%, 55% 7%, 59% 4%, 63% 8%, 67% 5%, 71% 2%, 75% 6%, 79% 3%, 83% 7%, 87% 4%, 91% 1%, 95% 5%, 100% 3%, 100% 100%, 0% 100%)',
+                    backgroundImage: 'repeating-linear-gradient(transparent 0px, transparent 27px, rgba(180,190,220,0.22) 27px, rgba(180,190,220,0.22) 28px)',
+                    backgroundPositionY: '44px',
+                  }}
+                >
+                  {/* Red margin rule */}
+                  <div className="absolute left-9 top-0 bottom-0 w-px bg-rose-200/55" />
+                  {/* Handwritten content */}
+                  <div className="pl-11 pr-4 flex flex-col min-h-[200px]">
+                    <p className="font-handwriting text-[17px] text-gray-700 leading-[28px] flex-1 mb-4">
+                      "{note.text}"
+                    </p>
+                    <div className="pt-2 border-t border-gray-200/40">
+                      <p className="font-handwriting text-[14px] text-gray-600 leading-tight">— {note.name}</p>
+                      <p className="font-handwriting text-[12px] text-lime-600 mt-0.5">{note.program}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* CTA block */}
-        <div className="text-center space-y-5">
+        <motion.div
+          variants={revealUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="text-center space-y-5"
+        >
           <p className="text-lg text-gray-600 max-w-xl mx-auto leading-relaxed">
-            Join hundreds of Ghatkopar families who have trusted Angels with their child's first steps.
+            Join hundreds of families who have trusted Angels with their child's first steps.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button onClick={openEnquiryModal}>
@@ -623,7 +961,7 @@ const Home = () => {
               Book a Visit
             </Button>
           </div>
-        </div>
+        </motion.div>
       </section>
 
     </div>

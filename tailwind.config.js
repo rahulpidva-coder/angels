@@ -15,6 +15,10 @@ export default {
   			body: [
   				'Nunito',
   				'sans-serif'
+  			],
+  			handwriting: [
+  				'Caveat',
+  				'cursive'
   			]
   		},
   		colors: {
