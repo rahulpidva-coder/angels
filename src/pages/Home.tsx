@@ -15,6 +15,7 @@ import prg_Play  from '../assets/img_PlayHome.png';
 import prg_Nur   from '../assets/home_nur.png';
 import prg_Jr    from '../assets/home_jr.png';
 import prg_Sr    from '../assets/home_sr.png';
+import trustImg  from '../assets/img_CalmTime.png';
 
 // ── Hero entrance animation variants ────────────────────────────────────────
 const heroContainer = {
@@ -57,11 +58,11 @@ const Home = () => {
   ];
 
   const trustFeatures = [
-    { icon: Shield,      title: 'Discipline & Punctuality',      desc: 'Gentle habits and values that stay with your child for life.',                        color: 'bg-green-100 text-green-600',   link: null          },
-    { icon: PencilLine,  title: 'Exceptional Handwriting',       desc: 'Fine motor skills and neat, confident writing from an early age.',                   color: 'bg-sky-100 text-sky-600',       link: null          },
-    { icon: BookOpen,    title: 'Strong Foundations for Life',   desc: 'Balanced growth across academics, confidence, and emotional health.',                 color: 'bg-blue-100 text-blue-600',     link: '/programs'   },
-    { icon: Shapes,      title: 'Rich Co-Curricular Activities', desc: 'Your child explores creativity through art, music, and movement every week.',         color: 'bg-orange-100 text-orange-600', link: '/activities' },
-    { icon: PartyPopper, title: 'Celebrations & Annual Day',     desc: 'Events that build confidence, expression, and joyful memories.',                     color: 'bg-purple-100 text-purple-600', link: '/gallery'    },
+    { icon: Shield,      color: 'bg-green-100 text-green-600',   dot: 'bg-green-500',    title: 'Discipline & Punctuality'  },
+    { icon: PencilLine,  color: 'bg-sky-100 text-sky-600',       dot: 'bg-sky-500',      title: 'Exceptional Handwriting'   },
+    { icon: BookOpen,    color: 'bg-blue-100 text-blue-600',     dot: 'bg-blue-500',     title: 'Strong Foundations'        },
+    { icon: Shapes,      color: 'bg-orange-100 text-orange-600', dot: 'bg-orange-400',   title: 'Co-Curricular Activities'  },
+    { icon: PartyPopper, color: 'bg-purple-100 text-purple-600', dot: 'bg-purple-500',   title: 'Annual Day & Events'       },
   ];
 
   return (
@@ -221,107 +222,174 @@ const Home = () => {
 
       {/* ── WHY PARENTS TRUST ANGELS ──────────────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader title="Why Parents Trust Angels" size="sm" className="mb-10" />
 
-        {/* Founding story editorial statement */}
+        {/* ── Act I: Editorial opening — section roots, clean and authoritative ── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.52 }}
           viewport={{ once: true }}
-          className="max-w-3xl mx-auto text-center mb-12"
+          className="mb-16 lg:mb-20"
         >
-          <p className="text-lg md:text-xl font-heading font-semibold text-gray-700 leading-relaxed">
-            What began in 1998 as one teacher's belief that five neighbourhood children
-            deserved better — has grown into Ghatkopar's most trusted preschool, now
-            welcoming second-generation families.
+          <SectionHeader title="Why Parents Trust Angels" size="sm" align="center" className="mb-7" />
+          <p className="text-xl font-heading font-semibold text-gray-700 leading-relaxed max-w-xl mx-auto text-center">
+            What began in 1998 as one teacher's belief that five neighbourhood
+            children deserved better — has grown into Ghatkopar's most trusted
+            preschool, now welcoming{' '}
+            <span className="text-lime-700">second-generation families</span>.
           </p>
-          <div className="mt-5 flex items-center justify-center gap-3">
-            <div className="w-8 h-px bg-gray-200 shrink-0" />
-            <span className="text-[11px] font-semibold text-gray-400 tracking-widest uppercase whitespace-nowrap">Since 1998 · Ghatkopar, Mumbai</span>
-            <div className="w-8 h-px bg-gray-200 shrink-0" />
+        </motion.div>
+
+        {/* ── Act II: The numbered manifesto — pillars as cinematic editorial statements ── */}
+        <div className="grid lg:grid-cols-[1fr_380px] gap-12 lg:gap-16 items-start">
+
+          {/* LEFT: numbered trust pillars — each one a chapter, not a list item */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
+          >
+            {trustPillars.map((item, i) => (
+              <motion.div
+                key={i}
+                variants={{ hidden: { opacity: 0, y: 28 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55 } } }}
+                className="relative"
+              >
+                {/* Editorial number — background watermark; depth without noise */}
+                <span className="pointer-events-none select-none absolute -top-6 -left-1 text-[8rem] font-heading font-bold leading-none text-gray-100 hidden lg:block">
+                  0{i + 1}
+                </span>
+
+                <Link
+                  to={item.link}
+                  className={`group relative z-10 flex gap-6 items-start ${
+                    i === 0
+                      ? 'pb-12 border-b border-gray-100'
+                      : i < trustPillars.length - 1
+                      ? 'py-12 border-b border-gray-100'
+                      : 'pt-12'
+                  }`}
+                >
+                  <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center shrink-0 shadow-sm mt-1`}>
+                    <item.icon size={24} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-2xl font-heading font-bold text-gray-800 mb-3 leading-snug group-hover:text-lime-700 transition-colors duration-200">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* RIGHT: portrait image — immersive, artfully framed */}
+          <motion.div
+            initial={{ opacity: 0, x: 28 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.65, delay: 0.18 }}
+            viewport={{ once: true }}
+            className="relative order-first lg:order-last"
+          >
+            {/* Warm offset shadow frame */}
+            <div className="absolute -bottom-5 -right-5 w-full h-full rounded-[2rem] bg-lime-100/60 pointer-events-none" />
+
+            <div className="relative rounded-[2rem] overflow-hidden shadow-2xl">
+              <img
+                src={trustImg}
+                alt="A nurturing moment at Angels Preschool"
+                className="w-full aspect-[3/4] object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+            </div>
+
+            {/* Floating legacy chip */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.88 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.48, duration: 0.38 }}
+              viewport={{ once: true }}
+              className="absolute -top-5 -left-5 bg-white rounded-2xl px-4 py-3 shadow-xl border border-gray-100"
+            >
+              <span className="text-2xl font-heading font-bold text-lime-600 leading-none">25+</span>
+              <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest mt-0.5">Years Trusted</p>
+            </motion.div>
+
+            {/* Floating trust signal */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.42 }}
+              viewport={{ once: true }}
+              className="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-sm rounded-2xl px-5 py-4 shadow-xl border border-white/60"
+            >
+              <div className="flex gap-0.5 mb-1.5">
+                {[1, 2, 3, 4, 5].map(s => (
+                  <Star key={s} size={12} className="text-yellow-400 fill-yellow-400" />
+                ))}
+              </div>
+              <p className="text-sm font-bold text-gray-800 leading-snug">Ghatkopar's Most Trusted</p>
+              <p className="text-[11px] text-gray-500 mt-0.5">Loved by parents. Chosen by families.</p>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* ── Act III: The Angels Promise — the emotional climax of the section ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 36 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.62 }}
+          viewport={{ once: true }}
+          className="mt-24 lg:mt-32"
+        >
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#f6fdf0] via-white to-[#fffef8] border border-lime-100/70">
+
+            {/* Top accent stripe — opening flourish, not a section underline */}
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-lime-400 to-transparent" />
+
+            {/* Atmospheric bloom behind the text */}
+            <div className="pointer-events-none absolute -top-28 left-1/2 -translate-x-1/2 w-[560px] h-[280px] bg-lime-100/35 rounded-full blur-3xl" />
+
+            {/* Large decorative quote mark — background character, desktop only */}
+            <span className="pointer-events-none select-none absolute top-6 left-10 text-[9rem] leading-none font-serif text-lime-200/50 hidden lg:block">
+              "
+            </span>
+
+            <div className="relative px-8 py-16 lg:px-24 lg:py-20">
+
+              {/* Ceremonial label */}
+              <div className="flex items-center justify-center gap-4 mb-10">
+                <div className="h-px w-12 bg-lime-300/80 rounded-full" />
+                <p className="text-[11px] font-bold text-lime-700 tracking-[0.32em] uppercase whitespace-nowrap">The Angels Promise</p>
+                <div className="h-px w-12 bg-lime-300/80 rounded-full" />
+              </div>
+
+              {/* The promise — centered stage moment, the section's emotional peak */}
+              <p className="text-2xl md:text-3xl lg:text-[34px] font-heading font-semibold text-gray-800 leading-relaxed text-center max-w-3xl mx-auto mb-12">
+                Before your child moves on from Angels, they will carry{' '}
+                <span className="text-lime-700">
+                  discipline, handwriting confidence, and a strong academic foundation
+                </span>{' '}
+                that primary schools notice — and the joyful, irreplaceable memories
+                of their very first school.
+              </p>
+
+              {/* Outcome markers — minimal pills, warmth not clutter */}
+              <div className="flex flex-wrap justify-center gap-3">
+                {trustFeatures.map((feat, i) => (
+                  <div key={i} className="flex items-center gap-2.5 bg-white rounded-full px-4 py-2.5 border border-gray-100 shadow-sm">
+                    <div className={`w-1.5 h-1.5 rounded-full ${feat.dot}`} />
+                    <span className="text-[13px] font-semibold text-gray-700">{feat.title}</span>
+                  </div>
+                ))}
+              </div>
+
+            </div>
           </div>
         </motion.div>
 
-        {/* Primary trust pillars — editorial tinted cards */}
-        <motion.div
-          className="grid lg:grid-cols-3 gap-6 mb-4"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
-        >
-          {trustPillars.map((item, i) => (
-            <motion.div
-              key={i}
-              variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
-              whileHover={{ y: -4 }}
-              className="h-full"
-            >
-              <Link to={item.link} className="block h-full group">
-                <div className={`relative bg-gradient-to-br ${item.gradient} rounded-3xl border ${item.border} p-8 h-full overflow-hidden shadow-sm hover:shadow-lg transition-shadow`}>
-                  <div className={`absolute top-0 left-0 right-0 h-[3px] ${item.accent} opacity-50`} />
-                  <div className={`w-12 h-12 ${item.color} rounded-2xl flex items-center justify-center mb-5 mt-2`}>
-                    <item.icon size={22} />
-                  </div>
-                  <h3 className="text-lg font-heading font-bold text-gray-800 mb-3 leading-snug">{item.title}</h3>
-                  <p className="text-gray-600 leading-relaxed text-sm">{item.desc}</p>
-                  <p className="mt-5 text-xs font-semibold text-lime-600 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    Learn more <ChevronRight size={12} />
-                  </p>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Secondary trust features — compact horizontal cards */}
-        <motion.div
-          className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
-        >
-          {trustFeatures.map((item, i) => {
-            const card = item.link ? (
-              <Link to={item.link} className="block h-full group">
-                <div className="flex items-start gap-3.5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow p-5 h-full">
-                  <div className={`w-9 h-9 ${item.color} rounded-xl flex items-center justify-center shrink-0 mt-0.5`}>
-                    <item.icon size={16} />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-gray-800 leading-snug mb-1">{item.title}</h3>
-                    <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
-                    <p className="mt-2 text-[11px] font-semibold text-lime-600 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                      Learn more <ChevronRight size={10} />
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            ) : (
-              <div className="flex items-start gap-3.5 bg-white rounded-2xl border border-gray-100 shadow-sm p-5 h-full">
-                <div className={`w-9 h-9 ${item.color} rounded-xl flex items-center justify-center shrink-0 mt-0.5`}>
-                  <item.icon size={16} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-gray-800 leading-snug mb-1">{item.title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
-                </div>
-              </div>
-            );
-            return (
-              <motion.div
-                key={i}
-                variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }}
-                whileHover={{ y: -3 }}
-                className="h-full"
-              >
-                {card}
-              </motion.div>
-            );
-          })}
-        </motion.div>
       </section>
 
       {/* PROGRAMS SNAPSHOT */}
@@ -434,42 +502,116 @@ const Home = () => {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
+      {/* ── PARENT VOICES ─────────────────────────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          title="What Parents Say"
-          subtitle="The trust families place in Angels is built over years of care, consistency, and genuine connection."
+          title="Heard From Our Families"
+          subtitle="Trust takes years to earn. These are the voices that built ours."
           size="sm"
-          className="mb-12"
+          className="mb-10"
         />
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            { name: 'Priya Sharma', role: 'Mother of Aarav (Sr. KG)',   text: 'Angels Preschool has been a blessing for us. The teachers are so warm and caring. Aarav loves going to school every day.' },
-            { name: 'Rahul Mehta',  role: 'Father of Vihaan (Nursery)', text: "The focus on discipline along with academics is what sets Angels apart. I've seen a positive change in my son's behavior." },
-            { name: 'Anita Desai',  role: 'Mother of Zara (Playgroup)', text: 'Safe, hygienic, and full of love. As a working mother, I feel completely at peace leaving my daughter here.' },
-          ].map((review, idx) => (
-            <motion.div key={idx} whileHover={{ y: -4 }}>
-              <Card padding="lg" className="relative h-full hover:shadow-xl">
-                <div className="absolute -top-4 left-8 bg-lime-500 text-white p-2 rounded-full shadow-md">
-                  <MessageCircle size={18} fill="currentColor" />
+
+        {/* Social proof anchor */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          viewport={{ once: true }}
+          className="flex items-center justify-center gap-2 mb-12 flex-wrap text-sm"
+        >
+          <div className="flex items-center gap-0.5">
+            {[...Array(5)].map((_, i) => <Star key={i} size={13} className="text-yellow-400 fill-yellow-400" />)}
+          </div>
+          <span className="font-bold text-gray-800">4.9 / 5</span>
+          <span className="text-gray-300 select-none">·</span>
+          <span className="text-gray-500">200+ parent reviews</span>
+          <span className="text-gray-300 select-none">·</span>
+          <span className="text-gray-500">Ghatkopar, Mumbai</span>
+        </motion.div>
+
+        {/* Editorial layout: featured left, two compact right */}
+        <div className="grid lg:grid-cols-2 gap-6 mb-14">
+
+          {/* Featured testimonial */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -4 }}
+            className="h-full"
+          >
+            <div className="bg-white rounded-3xl border border-gray-100 shadow-lg p-8 h-full flex flex-col">
+              <p className="text-[5rem] leading-none text-lime-100 -mb-3 select-none font-serif">{'“'}</p>
+              <p className="text-gray-700 leading-relaxed text-lg flex-1 mb-6">
+                Aarav used to cling to me at drop-off. By the third week at Angels, he was
+                running in ahead of me. That moment told me everything I needed to know
+                about this school.
+              </p>
+              <div className="flex items-center gap-0.5 mb-5">
+                {[...Array(5)].map((_, i) => <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />)}
+              </div>
+              <div className="border-t border-gray-100 pt-5 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-lime-100 flex items-center justify-center shrink-0">
+                  <span className="text-xs font-bold text-lime-700">PS</span>
                 </div>
-                <div className="flex items-center gap-1 pt-4 mb-5">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={16} className="text-yellow-500 fill-yellow-500" />)}
+                <div>
+                  <p className="font-bold text-gray-800 leading-none">Priya Sharma</p>
+                  <p className="text-sm text-lime-600 mt-0.5">Mother · Aarav, Sr. KG</p>
                 </div>
-                <p className="text-gray-600 leading-relaxed mb-6">"{review.text}"</p>
-                <div className="pt-4 border-t border-gray-100">
-                  <h4 className="font-bold text-gray-800">{review.name}</h4>
-                  <p className="text-sm text-lime-600">{review.role}</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Two compact testimonials stacked */}
+          <motion.div
+            className="flex flex-col gap-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.13 } } }}
+          >
+            {[
+              {
+                initials: 'RM', name: 'Rahul Mehta', role: 'Father · Vihaan, Nursery',
+                text: "The shift in Vihaan's confidence was noticeable within months — not just manners, but a quiet self-assurance in how he carries himself every day.",
+              },
+              {
+                initials: 'AD', name: 'Anita Desai', role: 'Mother · Zara, Playgroup',
+                text: "As a working parent, finding Angels was a genuine relief. I leave for work knowing my daughter is safe, loved, and fully engaged — every single day.",
+              },
+            ].map((t, i) => (
+              <motion.div
+                key={i}
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.45 } } }}
+                whileHover={{ y: -3 }}
+                className="flex-1"
+              >
+                <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 h-full flex flex-col">
+                  <p className="text-[3rem] leading-none text-lime-100 -mb-1 select-none font-serif">{'“'}</p>
+                  <p className="text-gray-600 leading-relaxed text-sm flex-1 mb-4">{t.text}</p>
+                  <div className="flex items-center gap-0.5 mb-4">
+                    {[...Array(5)].map((_, i) => <Star key={i} size={12} className="text-yellow-400 fill-yellow-400" />)}
+                  </div>
+                  <div className="border-t border-gray-100 pt-4 flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-lime-50 border border-lime-100 flex items-center justify-center shrink-0">
+                      <span className="text-[10px] font-bold text-lime-700">{t.initials}</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-800 leading-none">{t.name}</p>
+                      <p className="text-xs text-lime-600 mt-0.5">{t.role}</p>
+                    </div>
+                  </div>
                 </div>
-              </Card>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
 
-        {/* CTA after testimonials */}
-        <div className="mt-14 text-center space-y-5">
-          <p className="text-lg text-gray-600 max-w-xl mx-auto">
-            Join hundreds of families who have trusted Angels with their child's first steps.
+        {/* CTA block */}
+        <div className="text-center space-y-5">
+          <p className="text-lg text-gray-600 max-w-xl mx-auto leading-relaxed">
+            Join hundreds of Ghatkopar families who have trusted Angels with their child's first steps.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button onClick={openEnquiryModal}>
